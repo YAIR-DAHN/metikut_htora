@@ -70,8 +70,11 @@ async function startQuiz(userDetails) {
 }
 
 async function submitQuiz() {
+    // שמירת התשובה האחרונה לפני הגשה
+    saveCurrentAnswer();
+
     // בדיקה אם יש שאלות שלא נענו
-    const unansweredCount = userAnswers.filter(answer => answer === null).length;
+    const unansweredCount = userAnswers.filter(answer => answer === null || answer === '').length;
     if (unansweredCount > 0) {
         showModal({
             title: 'שאלות ללא מענה',
@@ -419,18 +422,21 @@ function showQuestion(index) {
 
 function saveCurrentAnswer() {
     const question = currentQuestions[currentQuestionIndex];
+    if (!question) return;
+
     if (question.type === 'אמריקאי') {
         const selected = document.querySelector(`input[name="q${currentQuestionIndex}"]:checked`);
         document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
         if (selected) {
             selected.closest('.option').classList.add('selected');
+            userAnswers[currentQuestionIndex] = selected.value;
         }
-        userAnswers[currentQuestionIndex] = selected ? selected.value : null;
     } else {
         const answer = document.querySelector('.open-answer').value.trim();
-        userAnswers[currentQuestionIndex] = answer || null;
+        userAnswers[currentQuestionIndex] = answer;
     }
 
+    updateQuestionIndicators();
     updateProgressBar();
 }
 
