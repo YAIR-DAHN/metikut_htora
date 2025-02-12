@@ -1,0 +1,1047 @@
+:root {
+    --primary-color: #1abc9c;
+    --primary-dark: #16a085;
+    --text-color: #2c3e50;
+    --background-color: #ffffff;
+    --border-color: #e0e0e0;
+    --error-color: #e74c3c;
+    --success-color: #27ae60;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --header-height: 80px;
+    --container-padding: 20px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--background-color) 0%, #f5f6fa 100%);
+    padding: var(--container-padding);
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    padding: 1rem 0;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--border-color);
+    flex-wrap: wrap;
+}
+
+.main-logo {
+    max-width: 200px;
+}
+
+.secondary-logo {
+    max-width: 150px;
+}
+
+.main-logo img,
+.secondary-logo img {
+    width: 100%;
+    height: auto;
+    max-height: 60px;
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.2);
+}
+
+input:invalid {
+    border-color: var(--error-color);
+}
+
+button {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+button:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(26, 188, 156, 0.3);
+}
+
+button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.progress-container {
+    margin: 2rem 0;
+    background-color: var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    height: 12px;
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: var(--primary-color);
+    transition: width 0.5s ease;
+    background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+}
+
+.progress-text {
+    position: absolute;
+    top: -25px;
+    right: 0;
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* רספונסיביות */
+@media (max-width: 768px) {
+    .logo-container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .main-logo {
+        max-height: 80px;
+    }
+
+    .secondary-logo {
+        max-height: 40px;
+    }
+}
+
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: opacity 0.3s ease-in-out;
+    opacity: 1;
+}
+
+.loading.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid var(--border-color);
+    border-top: 5px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading p {
+    margin-top: 1rem;
+    color: var(--text-color);
+    font-size: 1.1rem;
+}
+
+main {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 5px 20px var(--shadow-color);
+}
+
+.question {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--radius-md);
+    box-shadow: 0 2px 10px var(--shadow-color);
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: questionFadeIn 0.3s ease-out forwards;
+}
+
+.question::before {
+    content: 'quiz';
+    font-family: 'Material Icons';
+    position: absolute;
+    top: -15px;
+    left: -15px;
+    font-size: 100px;
+    opacity: 0.03;
+    transform: rotate(-15deg);
+}
+
+.question h3 {
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+}
+
+.options {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    gap: 1rem;
+}
+
+.option::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--primary-color);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 0;
+}
+
+.option:hover::before {
+    opacity: 0.05;
+}
+
+.option > * {
+    position: relative;
+    z-index: 1;
+}
+
+.option input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    outline: none;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.option input[type="radio"]:checked {
+    border-color: var(--primary-color);
+    background-color: var(--primary-color);
+}
+
+.option input[type="radio"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background-color: white;
+    border-radius: 50%;
+}
+
+.option.selected {
+    border-color: var(--primary-color);
+    background-color: rgba(26, 188, 156, 0.05);
+}
+
+.option.selected::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background-color: var(--primary-color);
+}
+
+.quiz-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 2px solid var(--border-color);
+    gap: 1rem;
+}
+
+.nav-button {
+    background-color: transparent;
+    color: var(--text-color);
+    border: 2px solid var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-button:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.nav-button .material-icons {
+    font-size: 20px;
+}
+
+.submit-button {
+    background-color: var(--success-color);
+}
+
+.submit-button:hover {
+    background-color: #219a52;
+}
+
+/* אנימציות */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+
+#registration-form {
+    animation: fadeIn 0.5s ease-out;
+}
+
+#quiz-section:not(.hidden) {
+    animation: slideIn 0.5s ease-out;
+}
+
+/* שיפור עיצוב הכפתורים */
+.theme-toggle {
+    position: fixed;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    background: var(--background-color);
+    border: none;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    padding: 0.8rem 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+}
+
+.theme-toggle:hover {
+    transform: translateX(-50%) translateY(3px);
+}
+
+.theme-toggle .material-icons {
+    font-size: 20px;
+    margin-left: 0.5rem;
+}
+
+body.scrolled .theme-toggle {
+    top: 0;
+}
+
+/* שיפור טופס ההרשמה */
+.form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.form-header h2 {
+    color: var(--primary-color);
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.form-header p {
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+.element-loader {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-color);
+    border-top: 2px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.error-message {
+    color: var(--error-color);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    display: block;
+}
+
+/* אייקונים */
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://fonts.gstatic.com/s/materialicons/v140/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format('woff2');
+}
+
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* אנימציות מעבר בין שאלות */
+@keyframes slideRight {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideLeft {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.question.slide-right {
+    animation: slideRight 0.5s ease-out;
+}
+
+.question.slide-left {
+    animation: slideLeft 0.5s ease-out;
+}
+
+.questions-status {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    flex-wrap: wrap;
+}
+
+.question-indicator {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--background-color);
+    border: 2px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.question-indicator.answered {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.question-indicator.current {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.2);
+}
+
+@keyframes questionFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.progress-dots {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 6px;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.progress-dot {
+    width: 8px;
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+
+.progress-dot.answered {
+    background-color: white;
+    transform: scale(1.2);
+}
+
+/* חלון קופץ מעוצב */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--radius-md);
+    max-width: 90%;
+    width: 400px;
+    position: relative;
+    transform: translateY(-20px);
+    transition: all 0.3s;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-overlay.active .modal {
+    transform: translateY(0);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    gap: 1rem;
+}
+
+.modal-icon {
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.modal-content {
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.modal-button {
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.modal-button.primary {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+}
+
+.modal-button.secondary {
+    background: transparent;
+    color: var(--text-color);
+    border: 2px solid var(--border-color);
+}
+
+/* עיצוב תיבת הסימון */
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem;
+    background: var(--background-color);
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--border-color);
+    transition: all 0.3s;
+    cursor: pointer;
+    margin-bottom: 1.5rem;
+}
+
+.checkbox-wrapper:hover {
+    border-color: var(--primary-color);
+    background: rgba(26, 188, 156, 0.05);
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox-custom {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    position: relative;
+    transition: all 0.3s;
+}
+
+.checkbox-wrapper input[type="checkbox"]:checked + .checkbox-custom {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.checkbox-wrapper input[type="checkbox"]:checked + .checkbox-custom::after {
+    content: 'check';
+    font-family: 'Material Icons';
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+}
+
+/* עיצוב שדה טקסט לשאלה פתוחה */
+.open-answer {
+    width: 100%;
+    min-height: 150px;
+    padding: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.6;
+    resize: vertical;
+    transition: all 0.3s;
+    background: var(--background-color);
+}
+
+.open-answer:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.1);
+}
+
+.open-answer::placeholder {
+    color: var(--text-color);
+    opacity: 0.5;
+}
+
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--text-color);
+    opacity: 0.5;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.modal-close:hover {
+    opacity: 1;
+    transform: none;
+    box-shadow: none;
+}
+
+/* עיצוב תפריט ניווט */
+.main-nav {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+    padding: 0 1rem;
+}
+
+.nav-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem;
+    border-radius: var(--radius-md);
+    background: white;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: all 0.3s;
+    box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+.nav-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px var(--shadow-color);
+}
+
+.nav-button .material-icons {
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+
+/* עיצוב אזור עדכונים */
+.updates-section {
+    margin-top: 2rem;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    color: var(--primary-color);
+}
+
+.updates-container {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.update-card {
+    background: white;
+    padding: 1.2rem;
+    border-radius: var(--radius-md);
+    box-shadow: 0 2px 10px var(--shadow-color);
+    transition: all 0.3s;
+}
+
+.update-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px var(--shadow-color);
+}
+
+.update-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.update-header .material-icons {
+    color: var(--primary-color);
+}
+
+.update-header time {
+    margin-right: auto;
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+/* Media Queries למובייל */
+@media screen and (max-width: 768px) {
+    :root {
+        --container-padding: 12px;
+    }
+
+    body {
+        font-size: 14px;
+    }
+
+    .logo-container {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 0.5rem;
+    }
+
+    .main-logo img,
+    .secondary-logo img {
+        max-height: 50px;
+    }
+
+    .main-nav {
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .nav-button {
+        flex: 1 1 calc(50% - 1rem);
+        min-width: 140px;
+        padding: 0.8rem;
+    }
+
+    .nav-button .material-icons {
+        font-size: 1.5rem;
+    }
+
+    .section-title {
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .update-card {
+        padding: 1rem;
+    }
+
+    .update-header h3 {
+        font-size: 1.1rem;
+    }
+}
+
+/* Media Queries למסכים קטנים מאוד */
+@media screen and (max-width: 480px) {
+    .main-nav {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .nav-button {
+        flex-direction: row;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .update-card {
+        margin: 0 -12px;
+        border-radius: 0;
+    }
+
+    .modal {
+        width: 100%;
+        margin: 0 12px;
+        padding: 1.5rem;
+    }
+}
+
+/* תיקונים לטפסים במובייל */
+@media screen and (max-width: 768px) {
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"],
+    select,
+    textarea {
+        padding: 0.8rem;
+        font-size: 16px; /* מונע זום אוטומטי באייפון */
+    }
+
+    .checkbox-wrapper {
+        padding: 0.8rem;
+    }
+
+    button[type="submit"] {
+        width: 100%;
+        padding: 1rem;
+    }
+}
+
+/* עיצוב שדה קלט לא תקין */
+input.invalid {
+    border-color: var(--error-color);
+    background-color: rgba(231, 76, 60, 0.05);
+}
+
+input.invalid:focus {
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+}
+
+/* עיצוב רשימת הסניפים */
+.branch-search-container {
+    position: relative;
+}
+
+.branch-results {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 12px var(--shadow-color);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    margin-top: 4px;
+}
+
+.branch-results:empty {
+    display: none;
+}
+
+.branch-option {
+    padding: 0.8rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.branch-option .branch-name {
+    flex: 1;
+}
+
+.branch-option:hover {
+    background-color: rgba(26, 188, 156, 0.1);
+}
+
+.branch-option .material-icons {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+.branch-option + .branch-option {
+    border-top: 1px solid var(--border-color);
+}
+
+/* תיקון למובייל */
+@media screen and (max-width: 768px) {
+    .branch-results {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: 0;
+        max-height: 200px;
+        border-radius: var(--radius-sm);
+        box-shadow: 0 4px 12px var(--shadow-color);
+        background: white;
+        z-index: 1000;
+    }
+
+    .branch-option {
+        padding: 1rem;
+    }
+
+    /* מוודא שהתוצאות תמיד יהיו מעל המקלדת */
+    .branch-search-container {
+        position: relative;
+        z-index: 1001;
+    }
+}
+
+/* עיצוב כפתור ביטול */
+.nav-button.cancel-button {
+    background-color: var(--error-color);
+    color: white;
+}
+
+.nav-button.cancel-button:hover {
+    background-color: #c0392b;
+}
+
+.nav-button.cancel-button .material-icons {
+    color: white;
+}
+
+/* עיצוב כפתור חזרה לדף הבית */
+.back-button-container {
+    margin-bottom: 2rem;
+}
+
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.2rem;
+    background-color: white;
+    color: var(--text-color);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: all 0.3s;
+    box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+.back-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px var(--shadow-color);
+    color: var(--primary-color);
+}
+
+.back-button .material-icons {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+}
+
+/* התאמה למובייל */
+@media screen and (max-width: 768px) {
+    .back-button {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .back-button .material-icons {
+        font-size: 1.1rem;
+    }
+} 
