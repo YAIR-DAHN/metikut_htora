@@ -12,6 +12,8 @@
     --radius-lg: 20px;
     --header-height: 80px;
     --container-padding: 20px;
+    --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, #20c997 100%);
+    --gradient-secondary: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
 }
 
 * {
@@ -28,6 +30,8 @@ body {
     min-height: 100vh;
     background: linear-gradient(135deg, var(--background-color) 0%, #f5f6fa 100%);
     padding: var(--container-padding);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
 }
 
 .logo-container {
@@ -146,6 +150,7 @@ button:disabled {
     .logo-container {
         flex-direction: column;
         gap: 1rem;
+        margin-bottom: 1rem;
     }
 
     .main-logo {
@@ -202,9 +207,10 @@ main {
     max-width: 800px;
     margin: 0 auto;
     background: white;
-    padding: 2rem;
+    padding: 1rem;
     border-radius: var(--radius-lg);
     box-shadow: 0 5px 20px var(--shadow-color);
+    animation: fadeIn 0.5s ease-out;
 }
 
 .question {
@@ -772,38 +778,109 @@ body.scrolled .theme-toggle {
 
 .updates-container {
     display: grid;
-    gap: 1.5rem;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 0.5rem;
 }
 
 .update-card {
     background: white;
-    padding: 1.2rem;
-    border-radius: var(--radius-md);
-    box-shadow: 0 2px 10px var(--shadow-color);
-    transition: all 0.3s;
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: 0 2px 20px var(--shadow-color);
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    position: relative;
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .update-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px var(--shadow-color);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 30px var(--shadow-color);
+}
+
+.update-card.new::after {
+    content: 'חדש!';
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: var(--primary-color);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+.loading-updates {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+.loading-updates .spinner {
+    margin: 0 auto 1rem;
 }
 
 .update-header {
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
     gap: 1rem;
-    margin-bottom: 1rem;
+    align-items: center;
+    word-break: break-word;
+    margin-bottom: 0.8rem;
 }
 
 .update-header .material-icons {
+    font-size: 1.8rem;
     color: var(--primary-color);
+    flex-shrink: 0;
+}
+
+.update-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.4;
 }
 
 .update-header time {
+    display: block;
     margin-right: auto;
     font-size: 0.9rem;
     opacity: 0.7;
+    margin-top: 0.3rem;
+}
+
+.update-card p {
+    word-break: break-word;
+    line-height: 1.5;
+    margin: 0;
+    color: var(--text-color);
+    opacity: 0.9;
+}
+
+/* אנימציה לכרטיסי עדכון חדשים */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.update-card {
+    animation: slideIn 0.5s ease-out;
 }
 
 /* Media Queries למובייל */
@@ -852,7 +929,55 @@ body.scrolled .theme-toggle {
     }
 
     .update-header h3 {
-        font-size: 1.1rem;
+        font-size: 1rem;
+    }
+
+    .updates-container {
+        max-height: 350px;
+        justify-items: center;
+    }
+
+    .update-header {
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 0.8rem;
+    }
+
+    .update-header time {
+        grid-column: 1 / -1;
+        justify-self: start;
+    }
+
+    .updates-section {
+        padding: 1rem 0.5rem;
+    }
+
+    .updates-container {
+        max-height: 350px;
+        padding: 0.3rem;
+    }
+
+    .update-card {
+        padding: 1rem;
+        margin: 0;
+    }
+
+    .update-header {
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 0.6rem;
+    }
+
+    .update-header h3 {
+        font-size: 1rem;
+        line-height: 1.3;
+    }
+
+    .update-header .material-icons {
+        font-size: 1.5rem;
+    }
+
+    .update-card p {
+        font-size: 0.95rem;
+        line-height: 1.4;
     }
 }
 
@@ -1142,5 +1267,425 @@ input.invalid:focus {
 
     .download-info p {
         font-size: 0.85rem;
+    }
+}
+
+/* עיצוב אזור ברוכים הבאים */
+.welcome-section {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    border-radius: var(--radius-lg);
+    color: white;
+}
+
+.welcome-header h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.welcome-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-bottom: 1.5rem;
+}
+
+.start-date {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--radius-md);
+    display: inline-flex;
+}
+
+/* עיצוב שאלות נפוצות */
+.faq-section {
+    margin: 3rem 0;
+}
+
+.faq-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.faq-item {
+    background: white;
+    border-radius: var(--radius-md);
+    box-shadow: 0 2px 8px var(--shadow-color);
+    overflow: hidden;
+}
+
+.faq-item summary {
+    padding: 1.2rem;
+    cursor: pointer;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s;
+}
+
+.faq-item summary:hover {
+    background: rgba(26, 188, 156, 0.05);
+}
+
+.faq-item summary::after {
+    content: 'expand_more';
+    font-family: 'Material Icons';
+    transition: transform 0.3s;
+}
+
+.faq-item[open] summary::after {
+    transform: rotate(180deg);
+}
+
+.faq-item p {
+    padding: 0 1.2rem 1.2rem;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+/* התאמה למובייל */
+@media screen and (max-width: 768px) {
+    .welcome-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .welcome-subtitle {
+        font-size: 1rem;
+    }
+
+    .start-date {
+        font-size: 0.9rem;
+        padding: 0.6rem 1rem;
+    }
+
+    .faq-item summary {
+        padding: 1rem;
+    }
+
+    .faq-item p {
+        padding: 0 1rem 1rem;
+    }
+}
+
+/* עיצוב דף מבחן לא זמין */
+.unavailable-section {
+    text-align: center;
+    padding: 3rem 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.unavailable-content {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 2px 20px var(--shadow-color);
+}
+
+.unavailable-icon {
+    font-size: 4rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.unavailable-content h1 {
+    color: var(--text-color);
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.next-quiz-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(26, 188, 156, 0.1);
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1.5rem;
+    color: var(--primary-color);
+}
+
+.preparation-message {
+    font-size: 1.2rem;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+/* התאמה למובייל */
+@media screen and (max-width: 768px) {
+    .unavailable-content h1 {
+        font-size: 1.4rem;
+    }
+
+    .next-quiz-date {
+        font-size: 0.9rem;
+        padding: 0.6rem 1rem;
+    }
+
+    .preparation-message {
+        font-size: 1rem;
+    }
+}
+
+/* עיצוב דף הזוכים */
+.winners-section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.winners-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.winners-icon {
+    font-size: 4rem;
+    color: #f1c40f;
+    margin-bottom: 1rem;
+    animation: trophy-shine 2s infinite;
+}
+
+@keyframes trophy-shine {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+.winners-container {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.winner-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: 0 2px 20px var(--shadow-color);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    align-items: center;
+    transition: transform 0.3s;
+}
+
+.winner-card:hover {
+    transform: translateY(-5px);
+}
+
+.winner-medal {
+    font-size: 2.5rem;
+    color: #f1c40f;
+}
+
+.winner-info h3 {
+    margin: 0;
+    color: var(--text-color);
+    font-size: 1.2rem;
+}
+
+.winner-details {
+    color: var(--text-color);
+    opacity: 0.8;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.no-winners {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+.no-winners .material-icons {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+/* עיצוב סרגל הגלילה */
+.updates-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.updates-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+}
+
+.updates-container::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+.updates-container::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
+}
+
+.update-content {
+    position: relative;
+}
+
+.update-full-content.hidden {
+    display: none;
+}
+
+.read-more-btn {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    padding: 0.5rem 0;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: opacity 0.3s;
+    margin-top: 0.5rem;
+    box-shadow: none;
+}
+
+.read-more-btn:hover {
+    opacity: 0.8;
+    transform: none;
+    background: none;
+    box-shadow: none;
+}
+
+/* אנימציות מעבר בין דפים */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+main {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* שיפור אפקט hover על כרטיסים */
+.card-hover {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* עיצוב כפתור שיתוף */
+.share-section {
+    text-align: center;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(26, 188, 156, 0.1) 0%, rgba(32, 201, 151, 0.1) 100%);
+    border-radius: var(--radius-lg);
+}
+
+.share-text {
+    margin-bottom: 1rem;
+    color: var(--text-color);
+    font-size: 1.1rem;
+}
+
+.share-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 0.8rem 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+}
+
+.share-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.share-button .material-icons {
+    font-size: 24px;
+}
+
+.share-button span:last-child {
+    font-weight: 500;
+}
+
+@media screen and (max-width: 768px) {
+    .share-section {
+        margin: 1.5rem 0;
+        padding: 1rem;
+    }
+
+    .share-text {
+        font-size: 1rem;
+    }
+
+    .share-button {
+        width: 100%;
+        justify-content: center;
+        padding: 1rem;
+    }
+}
+
+/* Ripple effect */
+.ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.ripple::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+}
+
+.ripple:active::after {
+    animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 0.5;
+    }
+    100% {
+        width: 200%;
+        height: 200%;
+        opacity: 0;
+    }
+}
+
+/* אנימציות טעינה הדרגתית */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease-out;
+}
+
+.animate-on-scroll.fade-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* התאמת אנימציות למובייל */
+@media (prefers-reduced-motion: reduce) {
+    .animate-on-scroll {
+        transition: none;
+        opacity: 1;
+        transform: none;
     }
 } 

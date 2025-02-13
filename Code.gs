@@ -3,6 +3,8 @@ const SPREADSHEET_ID = '1cpwhIaORiZwBObEsezWgYhztf75zcaqS6jlWatiC0UM'; // צרי
 const QUESTIONS_SHEET_NAME = 'שאלות';
 const ANSWERS_SHEET_NAME = 'תשובות';
 const BRANCHES_SHEET_NAME = 'סניפים';
+const WINNERS_SHEET_NAME = 'זוכים';
+const UPDATES_SHEET_NAME = 'עדכונים';
 
 function doGet(e) {
   const response = ContentService.createTextOutput()
@@ -52,6 +54,12 @@ function handleRequest(e) {
         return { error: result.error || 'Failed to submit quiz' };
       }
       return result;
+      
+    case 'getWinners':
+      return getWinners();
+      
+    case 'getUpdates':
+      return getUpdates();
       
     default:
       return {
@@ -190,4 +198,45 @@ function setupSpreadsheet() {
   }
   
   return "Spreadsheet setup completed";
+}
+
+function getWinners() {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const winnersSheet = ss.getSheetByName(WINNERS_SHEET_NAME);
+  
+  if (!winnersSheet) {
+    return { data: [] };
+  }
+  
+  const data = winnersSheet.getDataRange().getValues();
+  const headers = data[0];
+  const winners = data.slice(1).map(row => ({
+    name: row[0],
+    branch: row[1],
+    prize: row[2],
+    quiz: row[3]
+  }));
+  
+  return { data: winners };
+}
+
+function getUpdates() {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const updatesSheet = ss.getSheetByName(UPDATES_SHEET_NAME);
+  
+  if (!updatesSheet) {
+    return { data: [] };
+  }
+  
+  const data = updatesSheet.getDataRange().getValues();
+  const headers = data[0];
+  const updates = data.slice(1).reverse()
+    .map(row => ({
+      date: row[0],
+      title: row[1],
+      content: row[2],
+      type: row[3].toLowerCase().trim()
+    }));
+  
+  return { data: updates };
 } 

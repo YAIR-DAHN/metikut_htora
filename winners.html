@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>זוכי המבחן השבועי - מתיקות התורה</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dark-mode.css">
+    <script src="js/config.js"></script>
+    <script src="js/common.js"></script>
+</head>
+<body>
+    <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+        <p>טוען את רשימת הזוכים...</p>
+    </div>
+
+    <header>
+        <div class="logo-container">
+            <div class="secondary-logo">
+                <img src="assets/logos/or-israeli-logo.png" alt="אור ישראלי">
+            </div>
+            <div class="main-logo">
+                <img src="assets/logos/metikut-hatorah-logo.png" alt="מתיקות התורה">
+            </div>
+        </div>
+        <button class="theme-toggle">
+            מצב לילה
+            <span class="material-icons">dark_mode</span>
+        </button>
+    </header>
+
+    <main>
+        <div class="back-button-container">
+            <a href="index.html" class="back-button">
+                <span class="material-icons">home</span>
+                חזרה לדף הבית
+            </a>
+        </div>
+
+        <section class="winners-section">
+            <div class="winners-header">
+                <span class="material-icons winners-icon">emoji_events</span>
+                <h1>זוכי המבחן השבועי</h1>
+            </div>
+            
+            <div id="winners-container" class="winners-container">
+                <!-- תוכן דינמי יוכנס כאן -->
+            </div>
+        </section>
+    </main>
+
+    <script src="js/winners.js"></script>
+</body>
+</html> 

@@ -1,11 +1,17 @@
 // פונקציות משותפות כמו showModal, initDarkMode וכו' 
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbwtFZVgdhDNlkTIjD96frnd9kSbbFtsuHeECj6fXkRHnC55zc0ZpgaPB3OIyXDbIej19Q/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzukUmXo8t_pL4QzFnafDBf1rzOEQaTZMS_FU0OF1sTFac4d_5HVsf3ZjJOlKlWACBh7g/exec';
 
 // קאש לנתונים
 const cache = {
     questions: null,
     branches: null
+};
+
+// הגדרת זמינות המבחן
+const QUIZ_CONFIG = {
+    isAvailable: true, // האם המבחן זמין כרגע
+    nextQuizDate: '2024-02-25'  // תאריך המבחן הבא
 };
 
 function showLoading() {
@@ -154,4 +160,17 @@ function initDarkMode() {
 // מעקב אחר גלילת העמוד
 window.addEventListener('scroll', () => {
     document.body.classList.toggle('scrolled', window.scrollY > 50);
-}); 
+});
+
+// פונקציה לניתוב לדף המתאים
+function handleQuizNavigation(event) {
+    if (event) {
+        event.preventDefault();
+    }
+    
+    if (QUIZ_CONFIG.isAvailable) {
+        window.location.href = 'quiz.html';
+    } else {
+        window.location.href = 'quiz-unavailable.html';
+    }
+} 

@@ -1,15 +1,35 @@
 <!DOCTYPE html>
 <html dir="rtl" lang="he">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="מזים מתיקות התורה - מיזם לימוד משותף של פרק המפקיד - כל הפרטים אודות המיזם במקום אחד">
+    <meta property="og:title" content="מתיקות התורה - אור ישראלי">
+    <meta property="og:description" content="מיזם לימוד משותף של פרק המפקיד - כל הפרטים אודות המיזם במקום אחד">
+    <meta property="og:image" content="./assets/logos/metikut-hatorah-logo.png">
+    <!-- <meta property="og:url" content="https://metikut.onrender.com/"> -->
+    <meta name="theme-color" content="#1abc9c" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1abc9c" media="(prefers-color-scheme: dark)">
+    <meta name="msapplication-navbutton-color" content="#1abc9c">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#1abc9c">
+
+    <link rel="icon" type="image/png" href="./assets/logos/or-israeli-logo.png">
+    <link rel="apple-touch-icon" href="./assets/logos/or-israeli-logo.png">
+
+
     <title>מתיקות התורה</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dark-mode.css">
+    <script src="js/config.js"></script>
     <script src="js/common.js"></script>
+    <script src="js/updates.js"></script>
+    <script src="js/animations.js"></script>
     <script src="js/main.js"></script>
 </head>
+
 <body>
     <div id="loading" class="loading hidden">
         <div class="spinner"></div>
@@ -24,58 +44,115 @@
                 <img src="assets/logos/metikut-hatorah-logo.png" alt="מתיקות התורה">
             </div>
         </div>
-        <button class="theme-toggle">
+        <!-- <button class="theme-toggle">
             מצב לילה
             <span class="material-icons">dark_mode</span>
-        </button>
+        </button> -->
     </header>
 
     <main>
+        <!-- אזור ברוכים הבאים -->
+        <section class="welcome-section animate-on-scroll">
+            <div class="welcome-header">
+                <h1>ברוכים הבאים למיזם מתיקות התורה</h1>
+                <p class="welcome-subtitle">אלפי נערים לומדים פרק אחד, פרק 'המפקיד' מסכת בבא מציעא</p>
+            </div>
+            <div class="start-date">
+                <span class="material-icons">event</span>
+                <p>הלימוד מתחיל ביום שלישי כ' שבט התשפ"ה (18.2)</p>
+            </div>
+            <div class="welcome-header">
+                <br>
+                <p class="welcome-subtitle">פנו עוד עכשיו לרב הסניף שלכם לקבל את החוברת</p>
+            </div>
+            </div>
+        </section>
+
         <!-- תפריט ניווט -->
         <nav class="main-nav">
-            <a href="quiz.html" class="nav-button">
+            <a href="#" class="nav-button" onclick="handleQuizNavigation(event)">
                 <span class="material-icons">quiz</span>
                 מבחן שבועי
             </a>
-            <a href="#" class="nav-button">
+            <a href="winners.html" class="nav-button">
                 <span class="material-icons">emoji_events</span>
-                טבלת מצטיינים
+                זוכי המבחן
             </a>
-            <a href="#" class="nav-button">
+            <a href="#faq-section" class="nav-button">
                 <span class="material-icons">help_outline</span>
-                אודות
+                שאלות נפוצות
             </a>
+
+            <!-- חומרי לימוד -->
+            <a href="#downloads-section" class="nav-button">
+                <span class="material-icons">menu_book</span>
+                חומרי לימוד
+            </a>
+            
+            
         </nav>
+    
 
         <!-- אזור עדכונים -->
-        <section class="updates-section">
+        <section class="updates-section animate-on-scroll">
             <h2 class="section-title">
                 <span class="material-icons">campaign</span>
                 עדכונים אחרונים
             </h2>
-            <div class="updates-container">
-                <article class="update-card">
-                    <div class="update-header">
-                        <span class="material-icons">new_releases</span>
-                        <h3>מבחן חדש!</h3>
-                        <time>22.03.2024</time>
-                    </div>
-                    <p>המבחן השבועי החדש זמין עכשיו! בהצלחה לכל הנבחנים.</p>
-                </article>
-                
-                <article class="update-card">
-                    <div class="update-header">
-                        <span class="material-icons">stars</span>
-                        <h3>זוכי השבוע שעבר</h3>
-                        <time>15.03.2024</time>
-                    </div>
-                    <p>ברכות לזוכים במבחן השבועי! רשימת הזוכים תתפרסם בקרוב.</p>
-                </article>
+            <div id="updates-container" class="updates-container">
+                <div class="loading-updates">
+                    <div class="spinner"></div>
+                    <p>טוען עדכונים...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- שאלות נפוצות -->
+        <section class="faq-section animate-on-scroll" id="faq-section">
+            <h2 class="section-title">
+                <span class="material-icons">help_outline</span>
+                שאלות נפוצות
+            </h2>
+            <div class="faq-container">
+                <details class="faq-item">
+                    <summary>האם צריך להירשם?</summary>
+                    <p>במיזם זה אין רישום, צריך רק לבקש מרב הסניף את החוברת.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>מה בדיוק יש בחוברת?</summary>
+                    <p>גמרא + ביאור הגמרא + שאלות אקטואליות + בסוף החוברת שאלות על הגמרא.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>על מה יהיה מבחן מידי שבוע?</summary>
+                    <p>רק על השאלות חזרה בסוף החוברת [לא יהיה מבחן על השאלות אקטואליות].</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>פעם בכמה זמן יהיה מבחן?</summary>
+                    <p>פעם בשבוע יתקיים מבחן כאן באתר.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>באיזה יום יתקיים המבחן?</summary>
+                    <p>פעם בשבוע ביום שלישי או ביום אחר שהסניף פועל.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>איך יבחרו הנערים שישאלו על ידי גדולי ישראל?</summary>
+                    <p>לקראת שבועות יתקיים מבחן בכתב, ולאחר מכן יבחרו הנערים.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>במה אפשר לזכות מידי שבוע?</summary>
+                    <p>בכל שבוע מבין כל אלו שיעברו את המבחן תתקיים הגרלה על פרסים שווים.</p>
+                </details>
             </div>
         </section>
 
         <!-- אזור הורדות -->
-        <section class="downloads-section">
+        <section class="downloads-section animate-on-scroll" id="downloads-section">
             <h2 class="section-title">
                 <span class="material-icons">download</span>
                 חומרי לימוד להורדה
@@ -103,6 +180,16 @@
                 </a>
             </div>
         </section>
+
+        <!-- אזור שיתוף -->
+        <section class="share-section animate-on-scroll">
+            <p class="share-text">עזרו לנו להפיץ את המיזם!</p>
+            <button class="share-button ripple" onclick="shareWebsite()">
+                <span class="material-icons">share</span>
+                <span>שתפו את המיזם עם חברים</span>
+            </button>
+        </section>
     </main>
 </body>
-</html> 
+
+</html>

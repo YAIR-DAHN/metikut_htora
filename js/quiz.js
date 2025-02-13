@@ -5,6 +5,12 @@ let currentQuestionIndex = 0;
 let currentUserDetails = null;
 
 async function startQuiz(userDetails) {
+    // בדיקה אם המבחן זמין
+    if (!CONFIG.quiz.isAvailable) {
+        window.location.href = 'quiz-unavailable.html';
+        return;
+    }
+
     if (!userDetails || !userDetails.userName || !userDetails.branch || !userDetails.phone) {
         showModal({
             title: 'שגיאת טופס',
