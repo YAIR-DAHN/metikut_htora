@@ -133,18 +133,19 @@ function showModal(options) {
 
 // טיפול במצב לילה
 function initDarkMode() {
+    return; // מונע את הפעלת מצב לילה
     const themeToggle = document.querySelector('.theme-toggle');
     const currentTheme = localStorage.getItem('theme');
-
+    
     if (currentTheme === 'dark') {
         document.body.setAttribute('data-theme', 'dark');
         themeToggle.querySelector('.material-icons').textContent = 'light_mode';
     }
-
+    
     themeToggle.addEventListener('click', () => {
         const isDark = document.body.hasAttribute('data-theme');
         const icon = themeToggle.querySelector('.material-icons');
-
+        
         if (!isDark) {
             document.body.setAttribute('data-theme', 'dark');
             localStorage.setItem('theme', 'dark');
@@ -173,4 +174,26 @@ function handleQuizNavigation(event) {
     } else {
         window.location.href = 'quiz-unavailable.html';
     }
+}
+
+function showContactInfo() {
+    showModal({
+        title: 'y.d. systems',
+        message: `
+            <div class="contact-item">
+                <span class="material-icons">phone</span>
+                <a href="tel:0583730000" dir="ltr">058-373-0000</a>
+            </div>
+            <div class="contact-item">
+                <span class="material-icons">forum</span>
+                <a href="https://wa.me/972583730000" target="_blank" dir="ltr">058-373-0000</a>
+            </div>
+            <div class="contact-item">
+                <span class="material-icons">email</span>
+                <a href="mailto:yairdahn@gmail.com">yairdahn@gmail.com</a>
+            </div>
+        `,
+        confirmText: 'סגור',
+        icon: 'contact_support'
+    });
 } 

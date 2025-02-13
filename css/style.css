@@ -118,6 +118,7 @@ button:disabled {
 
 .progress-container {
     margin: 2rem 0;
+    margin-bottom: 3rem;
     background-color: var(--border-color);
     border-radius: var(--radius-lg);
     overflow: hidden;
@@ -148,17 +149,18 @@ button:disabled {
 /* רספונסיביות */
 @media (max-width: 768px) {
     .logo-container {
-        flex-direction: column;
+        flex-direction: row;
         gap: 1rem;
+        justify-content: center;
         margin-bottom: 1rem;
     }
 
     .main-logo {
-        max-height: 80px;
+        max-width: 120px;
     }
 
     .secondary-logo {
-        max-height: 40px;
+        max-width: 120px;
     }
 }
 
@@ -382,17 +384,16 @@ main {
 
 /* שיפור עיצוב הכפתורים */
 .theme-toggle {
-    position: fixed;
-    top: -50px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 100;
-    background: var(--background-color);
+    display: none;
+    background: none;
     border: none;
-    border-radius: 0 0 var(--radius-md) var(--radius-md);
-    padding: 0.8rem 1.5rem;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     cursor: pointer;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
     transition: all 0.3s;
 }
 
@@ -524,29 +525,27 @@ body.scrolled .theme-toggle {
 }
 
 .progress-dots {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 100%;
     display: flex;
-    justify-content: space-between;
-    padding: 0 6px;
-    transform: translateY(-50%);
-    pointer-events: none;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
 }
 
 .progress-dot {
-    width: 8px;
-    height: 8px;
-    background-color: rgba(255, 255, 255, 0.5);
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
+    background: var(--border-color);
     transition: all 0.3s;
 }
 
-.progress-dot.answered {
-    background-color: white;
+.progress-dot.active {
+    background: var(--primary-color);
     transform: scale(1.2);
+}
+
+.progress-dot.completed {
+    background: var(--success-color);
 }
 
 /* חלון קופץ מעוצב */
@@ -1688,4 +1687,148 @@ main {
         opacity: 1;
         transform: none;
     }
+}
+
+/* עיצוב פוטר */
+footer {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.footer-credit {
+    color: var(--text-color);
+    opacity: 0.8;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+.footer-credit:hover {
+    opacity: 1;
+}
+
+.contact-modal .modal-content {
+    display: grid;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin: 0.5rem 0;
+    padding: 0.8rem;
+    background: rgba(26, 188, 156, 0.1);
+    border-radius: var(--radius-md);
+    transition: all 0.3s;
+}
+
+.contact-item:hover {
+    background: rgba(26, 188, 156, 0.2);
+    transform: translateX(-5px);
+}
+
+.contact-item .material-icons {
+    color: var(--primary-color);
+}
+
+.contact-item a {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+/* אזור תמיכה */
+.support-section {
+    text-align: center;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.support-text {
+    color: var(--text-color);
+    margin-bottom: 1.2rem;
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+.support-contacts {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.support-contact {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: all 0.3s;
+    padding: 0.8rem 1.2rem;
+    border-radius: var(--radius-md);
+    background: rgba(26, 188, 156, 0.05);
+}
+
+.support-contact:hover {
+    background: rgba(26, 188, 156, 0.1);
+}
+
+.support-contact .material-icons {
+    color: var(--primary-color);
+    font-size: 1.3rem;
+}
+
+.support-contact .contact-label {
+    font-size: 0.9rem;
+    opacity: 0.7;
+    margin-right: 0.3rem;
+}
+
+@media screen and (max-width: 768px) {
+    .support-contacts {
+        gap: 0.5rem;
+        padding: 0 0.5rem;
+    }
+    
+    .support-contact {
+        flex: 1;
+        justify-content: center;
+        padding: 0.8rem 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .support-contact .material-icons {
+        font-size: 1.2rem;
+    }
+
+    .support-contact .contact-label {
+        font-size: 0.8rem;
+    }
+}
+
+/* עיצוב כפתור טעינה */
+.loading-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    min-width: 150px;
+}
+
+.loading-button .spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
 } 

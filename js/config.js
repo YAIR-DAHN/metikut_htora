@@ -4,7 +4,7 @@ const CONFIG = {
         url: 'https://script.google.com/macros/s/AKfycbzukUmXo8t_pL4QzFnafDBf1rzOEQaTZMS_FU0OF1sTFac4d_5HVsf3ZjJOlKlWACBh7g/exec'
     },
 
-    // הגדרות מבחן
+    // הגדרות מבחן לא עובד מכאן
     quiz: {
         isAvailable: true,  // האם המבחן זמין כרגע
         nextQuizDate: '2024-02-25',  // תאריך המבחן הבא
