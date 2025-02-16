@@ -1831,4 +1831,84 @@ footer {
     border-top-color: white;
     border-radius: 50%;
     animation: spin 1s linear infinite;
+}
+
+/* עיצוב צפייה בחוברת */
+.book-viewer-container {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    box-shadow: 0 2px 8px var(--shadow-color);
+    margin-bottom: 2rem;
+}
+
+.viewer-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-color);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.viewer-title .material-icons {
+    color: var(--primary-color);
+}
+
+.book-viewer {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: #f5f5f5;
+}
+
+.downloads-divider {
+    text-align: center;
+    margin: 2rem 0;
+    color: var(--text-color);
+    opacity: 0.7;
+    font-size: 0.9rem;
+}
+
+@media screen and (max-width: 768px) {
+    .book-viewer-container {
+        margin: 1rem -1rem;
+        border-radius: 0;
+    }
+}
+
+.book-preview {
+    position: relative;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.book-preview img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.preview-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.book-viewer-link:hover .preview-overlay {
+    opacity: 1;
+}
+
+.preview-overlay .material-icons {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
 } 
