@@ -1,8 +1,23 @@
 <!DOCTYPE html>
 <html dir="rtl" lang="he">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="מבחן שבועי במיזם מתיקות התורה - לימוד משותף של פרק המפקיד">
+    <meta name="keywords" content="מתיקות התורה, פרק המפקיד, מבחן שבועי, אור ישראלי">
+    <meta property="og:title" content="מתיקות התורה - מבחן שבועי">
+    <meta property="og:description" content="מבחן שבועי במיזם מתיקות התורה - לימוד משותף של פרק המפקיד">
+    <!-- <meta property="og:url" content="https://metikut.onrender.com/"> -->
+    <meta name="theme-color" content="#1abc9c" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1abc9c" media="(prefers-color-scheme: dark)">
+    <meta name="msapplication-navbutton-color" content="#1abc9c">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#1abc9c">
+
+    <link rel="icon" type="image/png" href="./assets/logos/or-israeli-logo.png">
+    <link rel="apple-touch-icon" href="./assets/logos/or-israeli-logo.png">
+
+
     <title>מתיקות התורה - מבחן שבועי</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
@@ -11,6 +26,7 @@
     <script src="js/common.js"></script>
     <script src="js/quiz.js"></script>
 </head>
+
 <body>
     <div id="loading" class="loading hidden">
         <div class="spinner"></div>
@@ -39,7 +55,7 @@
         <!-- טופס הרשמה -->
         <section id="registration-form" class="active-section">
             <div class="form-header">
-                <h2>הרשמה לחידון  השבועי</h2>
+                <h2>הרשמה לחידון השבועי</h2>
                 <p>אנא מלא את הפרטים הבאים כדי להתחיל במבחן</p>
             </div>
             <form id="userDetailsForm">
@@ -47,7 +63,7 @@
                     <label for="userName">שם מלא</label>
                     <input type="text" id="userName" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="branch">סניף</label>
                     <div class="branch-search-container">
@@ -77,7 +93,8 @@
         <section id="quiz-section" class="hidden">
             <div class="progress-container">
                 <div class="progress-bar"></div>
-                <span class="progress-text">שאלה <span id="currentQuestion">1</span> מתוך <span id="totalQuestions">10</span></span>
+                <span class="progress-text">שאלה <span id="currentQuestion">1</span> מתוך <span
+                        id="totalQuestions">10</span></span>
             </div>
 
             <div id="question-container"></div>
@@ -90,4 +107,5 @@
         </section>
     </main>
 </body>
-</html> 
+
+</html>

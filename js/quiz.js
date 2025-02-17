@@ -119,7 +119,8 @@ async function submitQuizToServer() {
                 message: 'סיימת את המבחן השבועי, הזוכים יפורסמו באתר',
                 icon: 'check_circle',
                 onConfirm: () => {
-                    window.location.reload();
+                    // window.location.reload();
+                    window.location.href = 'index.html';
                 }
             });
         } else {
