@@ -282,56 +282,88 @@ body{
 <script type="text/javascript">
 	// הגדרת משתנים גלובליים
 	const aspectRatio = 1.4; // יחס גובה-רוחב קבוע
+	const preloadQueue = new Set(); // תור טעינה
+	const loadedPages = new Set(); // עמודים שכבר נטענו
 
-	// פונקציה לטעינת תמונה
-	function loadPage(pageNum) {
-		const page = $(`.page[data-background="pages/${pageNum}.jpg"]`);
-		if (page.length && !page.hasClass('loaded')) {
+	// פונקציה לטעינת תמונה בודדת
+	function loadSinglePage(pageNum) {
+		if (loadedPages.has(pageNum)) return Promise.resolve();
+		
+		const page = $(`#magazine > div:nth-child(${pageNum})`);
+		if (!page.length) return Promise.resolve();
+		
+		return new Promise((resolve) => {
 			const img = new Image();
+			
 			img.onload = function() {
 				page.css('background-image', `url(pages/${pageNum}.jpg)`);
-				page.addClass('loaded');
+				loadedPages.add(pageNum);
+				resolve();
 			};
+			
+			img.onerror = function() {
+				console.error(`שגיאה בטעינת עמוד ${pageNum}`);
+				resolve();
+			};
+			
 			img.src = `pages/${pageNum}.jpg`;
-		}
+		});
 	}
 
 	// פונקציה לטעינת קבוצת עמודים
-	function loadPages(currentPage) {
-		loadPage(currentPage);
-		loadPage(currentPage + 1);
-		loadPage(currentPage - 1);
+	function loadPageGroup(startPage, count = 4) {
+		const pagesToLoad = [];
+		for (let i = 0; i < count; i++) {
+			const pageNum = startPage + i;
+			if (!loadedPages.has(pageNum) && !preloadQueue.has(pageNum)) {
+				preloadQueue.add(pageNum);
+				pagesToLoad.push(pageNum);
+			}
+		}
+		
+		// טעינת העמודים בזה אחר זה
+		return pagesToLoad.reduce((promise, pageNum) => {
+			return promise.then(() => loadSinglePage(pageNum))
+				.then(() => preloadQueue.delete(pageNum));
+		}, Promise.resolve());
+	}
+
+	// פונקציה לטעינה מקדימה של העמודים הבאים
+	function preloadNextPages(currentPage) {
+		// טעינת 4 העמודים הבאים
+		loadPageGroup(currentPage + 2);
 	}
 
 	$(window).ready(function() {
-		$('#magazine').turn({
-			display: 'double',
-			acceleration: true,
-			gradients: !$.isTouch,
-			elevation: 50,
-			reverse: true,
-			autoCenter: true,
-			page: 1,
-			cornerSize: 100,
-			touch: {
-				passive: true
-			},
-			corners: { 
-				forward: ['bl', 'tl'],
-				backward: ['br', 'tl']
-			},
-			when: {
-				turning: function(e, page, view) {
-					loadPages(page);
+		// טעינת 3 העמודים הראשונים מיד
+		loadPageGroup(1, 3).then(() => {
+			$('#magazine').turn({
+				display: 'double',
+				acceleration: true,
+				gradients: !$.isTouch,
+				elevation: 50,
+				reverse: true,
+				autoCenter: true,
+				page: 1,
+				cornerSize: 100,
+				touch: {
+					passive: true
 				},
-				turned: function(e, page, view) {
-					console.log('עמוד נבחר:', page, 'תצוגה:', view);
+				corners: { 
+					forward: ['bl', 'tl'],
+					backward: ['br', 'tl']
+				},
+				when: {
+					turning: function(e, page, view) {
+						// טעינת העמודים הבאים כשמתקרבים אליהם
+						preloadNextPages(page);
+					},
+					turned: function(e, page, view) {
+						console.log('עמוד נבחר:', page, 'תצוגה:', view);
+					}
 				}
-			}
+			});
 		});
-
-		// טעינת העמודים הראשונים
-		loadPages(1);
 	});
 	
 	$(window).bind('keydown', function(e){
