@@ -493,4 +493,27 @@ function showModal(options) {
 // מעקב אחר גלילת העמוד
 window.addEventListener('scroll', () => {
     document.body.classList.toggle('scrolled', window.scrollY > 50);
-}); 
+});
+
+function expandViewer() {
+    const iframe = document.getElementById('bookFrame');
+    if (iframe) {
+        if (iframe.requestFullscreen) {
+            iframe.requestFullscreen();
+        } else if (iframe.webkitRequestFullscreen) {
+            iframe.webkitRequestFullscreen();
+        } else if (iframe.msRequestFullscreen) {
+            iframe.msRequestFullscreen();
+        }
+    }
+}
+
+function closeViewer() {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+    }
+} 

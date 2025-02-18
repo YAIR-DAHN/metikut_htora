@@ -27,6 +27,7 @@
     <script src="js/common.js"></script>
     <script src="js/updates.js"></script>
     <script src="js/animations.js"></script>
+    <script src="js/viewer.js"></script>
     <script src="js/main.js"></script>
 </head>
 
@@ -154,27 +155,24 @@
                 חומרי לימוד להורדה
             </h2>
             <!-- צפייה בחוברת -->
-            <!-- <div class="book-viewer-container">
+            <div class="book-viewer-container">
                 <h3 class="viewer-title">
                     <span class="material-icons">menu_book</span>
                     צפייה בחוברת
                 </h3>
                 <div class="book-viewer">
-                    <div style="position:relative;padding-top:max(60%,324px);width:100%;height:0;">
-                        <iframe 
-                            style="position:absolute;border:none;width:100%;height:100%;left:0;top:0;" 
-                            src="https://online.fliphtml5.com/xaarn/yjiv/"
-                            seamless="seamless" 
-                            scrolling="no" 
-                            frameborder="0" 
-                            allowtransparency="true" 
-                            allowfullscreen="true"
-                            title="חוברת מתיקות התורה"
-                            rel="noopener">
-                        </iframe>
-                    </div>
+                    <iframe 
+                        id="bookFrame"
+                        src="turn.js/hoveret/hoveret.html"
+                        frameborder="0"
+                        allowfullscreen
+                        title="חוברת מתיקות התורה">
+                    </iframe>
+                    <!-- <button class="expand-button" onclick="expandViewer()">
+                        <span class="material-icons">open_in_full</span>
+                    </button> -->
                 </div>
-            </div> -->
+            </div>
 
             <!-- <div class="downloads-divider">או</div> -->
 
