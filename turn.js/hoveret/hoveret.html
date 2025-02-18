@@ -1,0 +1,423 @@
+<!doctype html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="../turn.min.js"></script>
+<!-- שימו לב: יש לוודא ש-turn.min.js הוא הגרסה המתוקנת (כלומר, turn.js לאחר השינוי) -->
+
+<style type="text/css">
+body{
+	background:#ccc;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+#magazine{
+	/* ניתן להגדיר רוחב וגובה מותאמים או להשתמש ב-100vw/100vh */
+	width: 100vw;
+	height: 100vh;
+}
+#magazine .turn-page{
+	background-color:#ccc;
+	background-size:100% 100%;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+.navigation-button {
+	position: fixed;
+	top: 50%;
+	transform: translateY(-50%);
+	background: rgba(0, 0, 0, 0.5);
+	color: white;
+	border: none;
+	padding: 12px 20px;
+	cursor: pointer;
+	z-index: 1000;
+	border-radius: 25px;
+	transition: all 0.3s ease;
+	font-family: Arial, sans-serif;
+}
+
+.navigation-button:hover {
+	background: rgba(0, 0, 0, 0.8);
+	transform: scale(1.1);
+}
+
+.navigation-button.prev-button {
+	right: 20px;
+}
+
+.navigation-button.next-button {
+	left: 20px;
+}
+
+/* עיצוב כפתור מסך מלא */
+.fullscreen-button {
+	position: fixed;
+	top: 20px;
+	left: 20px;
+	background: rgba(0, 0, 0, 0.5);
+	color: white;
+	border: none;
+	padding: 12px;
+	cursor: pointer;
+	z-index: 1000;
+	border-radius: 5px;
+	transition: all 0.3s;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.fullscreen-button:hover {
+	background: rgba(0, 0, 0, 0.8);
+	transform: scale(1.05);
+}
+
+.fullscreen-button .icon {
+	font-size: 20px;
+}
+
+.fullscreen-button .text {
+	font-size: 14px;
+	font-family: Arial, sans-serif;
+}
+
+/* עיצוב אייקון מסך מלא */
+.fullscreen-button[data-fullscreen="true"] .icon::before {
+	content: "⎯";
+}
+
+.fullscreen-button[data-fullscreen="false"] .icon::before {
+	content: "⛶";
+}
+
+.fullscreen-button[data-fullscreen="true"] .text {
+	content: "צא ממסך מלא";
+}
+
+.fullscreen-button[data-fullscreen="false"] .text {
+	content: "מסך מלא";
+}
+
+/* סגנון החצים */
+.navigation-button .arrow {
+	font-size: 24px;
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0 5px;
+}
+
+/* הסתרת כפתורי ניווט במצב רגיל */
+@media screen and (max-height: 500px) {
+	.navigation-controls {
+		display: none;
+	}
+}
+
+/* עיצוב כפתורים במצב מסך מלא */
+.fullscreen-controls {
+	position: fixed;
+	bottom: 30px;
+	left: 50%;
+	transform: translateX(-50%);
+	display: none;
+	gap: 20px;
+	z-index: 1000;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+.fullscreen-controls .navigation-button {
+	position: static;
+	transform: none;
+	background: #1abc9c; /* צבע האתר */
+	padding: 15px 30px;
+	font-size: 16px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	margin: 0 10px;
+}
+
+.fullscreen-controls .navigation-button:hover {
+	background: #16a085; /* צבע כהה יותר בhover */
+	transform: translateY(-2px);
+	box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+.fullscreen-controls .navigation-button .arrow {
+	font-size: 24px;
+}
+</style>
+</head>
+<body>
+
+<button class="fullscreen-button" data-fullscreen="false" onclick="toggleFullScreen()">
+	<span class="icon"></span>
+	<span class="text">מסך מלא</span>
+</button>
+
+<!-- כפתורי ניווט רגילים -->
+<button class="navigation-button prev-button" onclick="$('#magazine').turn('previous');">
+	<span class="arrow">&#8594;</span>
+</button>
+
+<button class="navigation-button next-button" onclick="$('#magazine').turn('next');">
+	<span class="arrow">&#8592;</span>
+</button>
+
+<!-- כפתורי ניווט למסך מלא -->
+<div class="fullscreen-controls">
+	<button class="navigation-button next-button" onclick="$('#magazine').turn('next');">
+		<span class="arrow">&#8592;</span>
+		<span>הבא</span>
+	</button>
+	<button class="navigation-button prev-button" onclick="$('#magazine').turn('previous');">
+		<span>הקודם</span>
+		<span class="arrow">&#8594;</span>
+	</button>
+</div>
+
+<div id="magazine">
+	<div style="background-image:url(pages/1.jpg);"></div>
+	<div style="background-image:url(pages/2.jpg);"></div>
+	<div style="background-image:url(pages/3.jpg);"></div>
+	<div style="background-image:url(pages/4.jpg);"></div>
+	<div style="background-image:url(pages/5.jpg);"></div>
+	<div style="background-image:url(pages/6.jpg);"></div>
+	<div style="background-image:url(pages/7.jpg);"></div>
+	<div style="background-image:url(pages/8.jpg);"></div>
+	<div style="background-image:url(pages/9.jpg);"></div>
+	<div style="background-image:url(pages/10.jpg);"></div>
+	<div style="background-image:url(pages/11.jpg);"></div>
+	<div style="background-image:url(pages/12.jpg);"></div>
+	<div style="background-image:url(pages/13.jpg);"></div>
+	<div style="background-image:url(pages/14.jpg);"></div>
+	<div style="background-image:url(pages/15.jpg);"></div>
+	<div style="background-image:url(pages/16.jpg);"></div>
+	<div style="background-image:url(pages/17.jpg);"></div>
+	<div style="background-image:url(pages/18.jpg);"></div>
+	<div style="background-image:url(pages/19.jpg);"></div>
+	<div style="background-image:url(pages/20.jpg);"></div>
+	<div style="background-image:url(pages/21.jpg);"></div>
+	<div style="background-image:url(pages/22.jpg);"></div>
+	<div style="background-image:url(pages/23.jpg);"></div>
+	<div style="background-image:url(pages/24.jpg);"></div>
+	<div style="background-image:url(pages/25.jpg);"></div>
+	<div style="background-image:url(pages/26.jpg);"></div>
+	<div style="background-image:url(pages/27.jpg);"></div>
+	<div style="background-image:url(pages/28.jpg);"></div>
+	<div style="background-image:url(pages/29.jpg);"></div>
+	<div style="background-image:url(pages/30.jpg);"></div>
+	<div style="background-image:url(pages/31.jpg);"></div>
+	<div style="background-image:url(pages/32.jpg);"></div>
+	<div style="background-image:url(pages/33.jpg);"></div>
+	<div style="background-image:url(pages/34.jpg);"></div>
+	<div style="background-image:url(pages/35.jpg);"></div>
+	<div style="background-image:url(pages/36.jpg);"></div>
+	<div style="background-image:url(pages/37.jpg);"></div>
+	<div style="background-image:url(pages/38.jpg);"></div>
+	<div style="background-image:url(pages/39.jpg);"></div>
+	<div style="background-image:url(pages/40.jpg);"></div>
+	<div style="background-image:url(pages/41.jpg);"></div>
+	<div style="background-image:url(pages/42.jpg);"></div>
+	<div style="background-image:url(pages/43.jpg);"></div>
+	<div style="background-image:url(pages/44.jpg);"></div>
+	<div style="background-image:url(pages/45.jpg);"></div>
+	<div style="background-image:url(pages/46.jpg);"></div>
+	<div style="background-image:url(pages/47.jpg);"></div>
+	<div style="background-image:url(pages/48.jpg);"></div>
+	<div style="background-image:url(pages/49.jpg);"></div>
+	<div style="background-image:url(pages/50.jpg);"></div>
+	<div style="background-image:url(pages/51.jpg);"></div>
+	<div style="background-image:url(pages/52.jpg);"></div>
+	<div style="background-image:url(pages/53.jpg);"></div>
+	<div style="background-image:url(pages/54.jpg);"></div>
+	<div style="background-image:url(pages/55.jpg);"></div>
+	<div style="background-image:url(pages/56.jpg);"></div>
+	<div style="background-image:url(pages/57.jpg);"></div>
+	<div style="background-image:url(pages/58.jpg);"></div>
+	<div style="background-image:url(pages/59.jpg);"></div>
+	<div style="background-image:url(pages/60.jpg);"></div>
+</div>
+
+<script type="text/javascript">
+	// הגדרת משתנים גלובליים
+	const aspectRatio = 1.4; // יחס גובה-רוחב קבוע
+
+	$(window).ready(function() {
+		const windowWidth = $(window).width();
+		const windowHeight = $(window).height();
+		let width, height;
+		
+		if (windowWidth / windowHeight > aspectRatio) {
+			height = windowHeight;
+			width = height * aspectRatio;
+		} else {
+			width = windowWidth;
+			height = width / aspectRatio;
+		}
+		
+		$('#magazine').css({
+			width: width + 'px',
+			height: height + 'px',
+			margin: '0 auto'
+		});
+
+		$('#magazine').turn({
+			display: 'double',
+			acceleration: true,
+			gradients: !$.isTouch,
+			elevation: 50,
+			reverse: true,        // מאפשר הפיכת סדר הדפים ל-RTL
+			autoCenter: true,
+			page: 1,              // עמוד התחלתי
+			cornerSize: 100,  // הגדלת אזור הפינה הרגיש למגע (ברירת מחדל היא 100)
+			touch: {
+				passive: true
+			},
+			corners: { 
+				// ניתן להתאים את הפינות לפי הצורך
+				forward: ['bl', 'tl'],
+				backward: ['br', 'tl']
+			},
+			when: {
+				turned: function(e, page, view) {
+					console.log('עמוד נבחר:', page, 'תצוגה:', view);
+				}
+			}
+		});
+		
+		// עדכון גודל בעת שינוי גודל חלון
+		$(window).resize(function() {
+			const windowWidth = $(window).width();
+			const windowHeight = $(window).height();
+			let width, height;
+			
+			if (windowWidth / windowHeight > aspectRatio) {
+				height = windowHeight;
+				width = height * aspectRatio;
+			} else {
+				width = windowWidth;
+				height = width / aspectRatio;
+			}
+			
+			$('#magazine').turn('size', width, height);
+		});
+	});
+	
+	$(window).bind('keydown', function(e){
+		if (e.keyCode==37)  // חץ שמאלה – עמוד הבא
+			$('#magazine').turn('next');
+		else if (e.keyCode==39)  // חץ ימינה – עמוד הקודם
+			$('#magazine').turn('previous');
+	});
+
+	// פונקציה לטיפול במסך מלא
+	function toggleFullScreen() {
+		const elem = document.documentElement;
+		const button = document.querySelector('.fullscreen-button');
+		const magazine = $('#magazine');
+		const regularButtons = $('.navigation-button:not(.fullscreen-controls *)');
+		const fullscreenControls = $('.fullscreen-controls');
+		
+		// שמירת המיקום המקורי של הכפתורים
+		const originalButtonPositions = {
+			prev: {
+				position: 'fixed',
+				top: '50%',
+				right: '20px',
+				transform: 'translateY(-50%)'
+			},
+			next: {
+				position: 'fixed',
+				top: '50%',
+				left: '20px',
+				transform: 'translateY(-50%)'
+			}
+		};
+		
+		function calculateOptimalSize() {
+			const width = window.innerWidth;
+			const height = window.innerHeight;
+			
+			if (width / height > aspectRatio) {
+				return {
+					height: height,
+					width: height * aspectRatio
+				};
+			}
+			return {
+				width: width,
+				height: width / aspectRatio
+			};
+		}
+
+		if (!document.fullscreenElement) {
+			elem.requestFullscreen().then(() => {
+				requestAnimationFrame(() => {
+					const size = calculateOptimalSize();
+					magazine.turn('size', size.width, size.height);
+					magazine.css({
+						'position': 'fixed',
+						'top': '50%',
+						'left': '50%',
+						'transform': 'translate(-50%, -50%)'
+					});
+					
+					button.setAttribute('data-fullscreen', 'true');
+					button.querySelector('.text').textContent = 'צא ממסך מלא';
+					
+					regularButtons.fadeOut();
+					fullscreenControls.fadeIn().css('display', 'flex');
+				});
+			});
+		} else {
+			Promise.resolve()
+				.then(() => {
+					if (document.exitFullscreen) {
+						return document.exitFullscreen();
+					} else if (document.webkitExitFullscreen) {
+						return document.webkitExitFullscreen();
+					} else if (document.mozCancelFullScreen) {
+						return document.mozCancelFullScreen();
+					} else if (document.msExitFullscreen) {
+						return document.msExitFullscreen();
+					}
+				})
+				.then(() => {
+					requestAnimationFrame(() => {
+						const size = calculateOptimalSize();
+						magazine.turn('size', size.width, size.height);
+						magazine.css({
+							'position': 'relative',
+							'top': 'auto',
+							'left': 'auto',
+							'transform': 'none'
+						});
+						
+						button.setAttribute('data-fullscreen', 'false');
+						button.querySelector('.text').textContent = 'מסך מלא';
+						
+						fullscreenControls.fadeOut();
+						regularButtons.fadeIn().each(function() {
+							const $btn = $(this);
+							const isNext = $btn.hasClass('next-button');
+							const pos = isNext ? originalButtonPositions.next : originalButtonPositions.prev;
+							$btn.css(pos);
+						});
+					});
+				});
+		}
+	}
+
+	// עדכון כפתור מסך מלא
+	document.querySelector('.fullscreen-button').onclick = toggleFullScreen;
+</script>
+
+</body>
+</html>
