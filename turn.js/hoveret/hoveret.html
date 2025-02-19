@@ -154,7 +154,7 @@ body{
 }
 
 /* אנימציית טעינה */
-.page:not(.loaded)::after {
+#magazine > div[data-background]:not([style*="background-image"])::after {
 	content: '';
 	position: absolute;
 	top: 50%;
