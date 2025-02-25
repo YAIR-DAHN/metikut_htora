@@ -613,6 +613,7 @@ body.scrolled .theme-toggle {
 .modal-content {
     margin-bottom: 1.5rem;
     line-height: 1.6;
+    text-align: center;
 }
 
 .modal-actions {
