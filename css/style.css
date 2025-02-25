@@ -1057,12 +1057,12 @@ input.invalid:focus {
     right: 0;
     left: 0;
     background: white;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-sm);
-    box-shadow: 0 4px 12px var(--shadow-color);
+    border: 1px solid #ddd;
+    border-top: none;
     max-height: 200px;
     overflow-y: auto;
-    z-index: 1000;
+    z-index: 100;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-top: 4px;
 }
 
@@ -2017,4 +2017,131 @@ footer {
     cursor: pointer;
     transition: all 0.3s;
     font-size: 1.1rem;
+}
+
+/* סגנון לאזור המבחן */
+#quiz-section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* סגנון להודעה לפני המבחן */
+.quiz-announcement {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    padding: 20px;
+}
+
+.announcement-content {
+    background-color: white;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 90%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    animation: slide-up 0.4s ease-out;
+}
+
+@keyframes slide-up {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.announcement-header {
+    background-color: #1abc9c;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.announcement-header h3 {
+    margin: 0 10px;
+    font-size: 1.2rem;
+}
+
+.close-announcement {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+.close-announcement:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.announcement-body {
+    padding: 20px;
+    max-height: 60vh;
+    overflow-y: auto;
+    line-height: 1.6;
+}
+
+.announcement-footer {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid #eee;
+}
+
+.start-quiz-btn {
+    background-color: #1abc9c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.start-quiz-btn:hover {
+    background-color: #16a085;
+}
+
+/* מצב כהה להודעה */
+[data-theme="dark"] .announcement-content {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+}
+
+[data-theme="dark"] .announcement-header {
+    background-color: #16a085;
+}
+
+[data-theme="dark"] .announcement-footer {
+    border-top-color: #34495e;
+}
+
+/* רספונסיביות להודעה */
+@media (max-width: 480px) {
+    .announcement-content {
+        width: 95%;
+    }
+    
+    .announcement-body {
+        padding: 15px;
+        max-height: 50vh;
+    }
 } 

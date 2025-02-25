@@ -479,6 +479,33 @@ function saveCurrentAnswer() {
 document.addEventListener('DOMContentLoaded', async () => {
     initDarkMode();
 
+    // טיפול בהודעה לפני המבחן
+    if (CONFIG.quiz.showAnnouncement) {
+        const announcement = document.getElementById('quiz-announcement');
+        const closeBtn = document.querySelector('.close-announcement');
+        const startQuizBtn = document.querySelector('.start-quiz-btn');
+        const announcementText = document.getElementById('announcement-text');
+        
+        // עדכון תוכן ההודעה מהקונפיגורציה
+        if (CONFIG.quiz.announcementText) {
+            announcementText.textContent = CONFIG.quiz.announcementText;
+        }
+        
+        // סגירת ההודעה והתחלת המבחן
+        function closeAnnouncement() {
+            announcement.style.opacity = '0';
+            setTimeout(() => {
+                announcement.style.display = 'none';
+            }, 300);
+        }
+        
+        closeBtn.addEventListener('click', closeAnnouncement);
+        startQuizBtn.addEventListener('click', closeAnnouncement);
+    } else {
+        // אם לא צריך להציג הודעה, הסתר אותה
+        document.getElementById('quiz-announcement').style.display = 'none';
+    }
+
     // נעילת כפתור התחלת המבחן
     const submitButton = document.querySelector('#userDetailsForm button[type="submit"]');
     submitButton.disabled = true;
