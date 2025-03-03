@@ -10,9 +10,9 @@ const cache = {
 
 // הגדרת זמינות המבחן
 const QUIZ_CONFIG = {
-    // isAvailable: false, // האם המבחן זמין כרגע
-    isAvailable: true, // האם המבחן זמין כרגע
-    nextQuizDate: '2024-02-25'  // תאריך המבחן הבא
+    isAvailable: false, // האם המבחן זמין כרגע
+    // isAvailable: true, // האם המבחן זמין כרגע
+    nextQuizDate: '2024-03-04'  // תאריך המבחן הבא
 };
 
 function showLoading() {
