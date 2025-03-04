@@ -10,8 +10,8 @@ const cache = {
 
 // הגדרת זמינות המבחן
 const QUIZ_CONFIG = {
-    isAvailable: false, // האם המבחן זמין כרגע
-    // isAvailable: true, // האם המבחן זמין כרגע
+    // isAvailable: false, // האם המבחן זמין כרגע
+    isAvailable: true, // האם המבחן זמין כרגע
     nextQuizDate: '2024-03-04'  // תאריך המבחן הבא
 };
 
@@ -67,6 +67,12 @@ async function fetchFromAPI(action, method = 'GET', data = null) {
 function showModal(options) {
     const { title, message, icon = 'info', confirmText = 'אישור', cancelText = 'ביטול', onConfirm, onCancel } = options;
     
+    // הסרת מודלים קודמים אם קיימים
+    const existingModal = document.querySelector('.modal-overlay');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
     const modalHTML = `
         <div class="modal-overlay">
             <div class="modal">
@@ -89,7 +95,116 @@ function showModal(options) {
     document.body.insertAdjacentHTML('beforeend', modalHTML);
     const modalOverlay = document.querySelector('.modal-overlay');
     
-    setTimeout(() => modalOverlay.classList.add('active'), 10);
+    // בדיקה אם יש סגנונות למודל
+    if (!document.querySelector('style#modal-styles')) {
+        const modalStyles = `
+            <style id="modal-styles">
+                .modal-overlay {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background-color: rgba(0, 0, 0, 0.7);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 9999;
+                    opacity: 0;
+                    visibility: hidden;
+                    transition: opacity 0.3s, visibility 0.3s;
+                }
+                
+                .modal-overlay.active {
+                    opacity: 1;
+                    visibility: visible;
+                }
+                
+                .modal {
+                    background-color: white;
+                    border-radius: 8px;
+                    max-width: 90%;
+                    width: 500px;
+                    padding: 20px;
+                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+                    position: relative;
+                }
+                
+                .modal-close {
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    background: none;
+                    border: none;
+                    cursor: pointer;
+                    font-size: 24px;
+                    color: #999;
+                }
+                
+                .modal-header {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 15px;
+                }
+                
+                .modal-icon {
+                    margin-left: 10px;
+                    color: #1abc9c;
+                    font-size: 24px;
+                }
+                
+                .modal-title {
+                    margin: 0;
+                    font-size: 20px;
+                }
+                
+                .modal-content {
+                    margin-bottom: 20px;
+                    line-height: 1.5;
+                }
+                
+                .modal-actions {
+                    display: flex;
+                    justify-content: flex-end;
+                }
+                
+                .modal-button {
+                    padding: 8px 16px;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-size: 14px;
+                    margin-right: 10px;
+                }
+                
+                .modal-button:last-child {
+                    margin-right: 0;
+                }
+                
+                .modal-button.primary {
+                    background-color: #1abc9c;
+                    color: white;
+                }
+                
+                .modal-button.secondary {
+                    background-color: #f1f1f1;
+                    color: #333;
+                }
+                
+                .modal-button.primary:hover {
+                    background-color: #16a085;
+                }
+                
+                .modal-button.secondary:hover {
+                    background-color: #e0e0e0;
+                }
+            </style>
+        `;
+        document.head.insertAdjacentHTML('beforeend', modalStyles);
+    }
+    
+    // הוספת הקלאס active מיד
+    modalOverlay.classList.add('active');
     
     const confirmButton = modalOverlay.querySelector('.modal-button.primary');
     const cancelButton = modalOverlay.querySelector('.modal-button.secondary');

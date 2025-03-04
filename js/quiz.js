@@ -82,13 +82,34 @@ async function submitQuiz() {
     // בדיקה אם יש שאלות שלא נענו
     const unansweredCount = userAnswers.filter(answer => answer === null || answer === '').length;
     if (unansweredCount > 0) {
-        showModal({
-            title: 'שאלות ללא מענה',
-            message: `נותרו ${unansweredCount} שאלות ללא מענה. האם ברצונך להגיש את המבחן?`,
-            icon: 'warning',
-            confirmText: 'הגש מבחן',
-            cancelText: 'חזור למבחן',
-            onConfirm: submitQuizToServer,
+        // יצירת דיאלוג מותאם אישית
+        const confirmDialogHTML = `
+            <div id="confirm-dialog" class="custom-dialog">
+                <div class="dialog-content">
+                    <div class="dialog-header">
+                        <span class="material-icons warning-icon">warning</span>
+                        <h2>שאלות ללא מענה</h2>
+                    </div>
+                    <p>נותרו ${unansweredCount} שאלות ללא מענה. האם ברצונך להגיש את המבחן?</p>
+                    <div class="dialog-buttons">
+                        <button id="cancel-submit" class="secondary-button">חזור למבחן</button>
+                        <button id="confirm-submit" class="primary-button">הגש מבחן</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // הוספת הדיאלוג לדף
+        document.body.insertAdjacentHTML('beforeend', confirmDialogHTML);
+        
+        // הוספת מאזיני אירועים לכפתורים
+        document.getElementById('confirm-submit').addEventListener('click', () => {
+            document.getElementById('confirm-dialog').remove();
+            submitQuizToServer();
+        });
+        
+        document.getElementById('cancel-submit').addEventListener('click', () => {
+            document.getElementById('confirm-dialog').remove();
         });
         return;
     }
@@ -100,11 +121,8 @@ async function submitQuizToServer() {
     showLoading();
     try {
         if (!currentUserDetails) {
-            showModal({
-                title: 'שגיאה',
-                message: 'לא נמצאו פרטי משתמש',
-                icon: 'error'
-            });
+            hideLoading();
+            alert('לא נמצאו פרטי משתמש');
             return;
         }
 
@@ -114,27 +132,81 @@ async function submitQuizToServer() {
         });
         
         if (result.success) {
-            showModal({
-                title: 'אשריך!',
-                message: 'סיימת את המבחן השבועי, הזוכים יפורסמו באתר,  ועכשיו לא לשכוח ההספק השבועי דף לד: ממשיכים בכל הכח כי אין דבר מתוק יותר מדף גמרא, תנועת הנוער "אור ישראלי" מיזם מתיקות התורה',
-                icon: 'check_circle',
-                onConfirm: () => {
-                    // window.location.reload();
-                    window.location.href = 'index.html';
-                }
-            });
+            // קודם נסתיר את מסך הטעינה
+            hideLoading();
+            
+            // נשנה את תצוגת הדף להודעת הצלחה
+            document.body.innerHTML = `
+                <div class="success-page">
+                    <div class="success-container">
+                        <span class="material-icons success-icon">check_circle</span>
+                        <h1>אשריך!</h1>
+                        <p>סיימת את המבחן השבועי, הזוכים יפורסמו באתר, ועכשיו לא לשכוח ההספק השבועי דף לד: ממשיכים בכל הכח כי אין דבר מתוק יותר מדף גמרא, תנועת הנוער "אור ישראלי" מיזם מתיקות התורה</p>
+                        <button onclick="window.location.href='index.html'">חזרה לדף הבית</button>
+                    </div>
+                </div>
+                <style>
+                    .success-page {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        min-height: 100vh;
+                        background-color: #f5f5f5;
+                        font-family: 'Rubik', sans-serif;
+                    }
+                    
+                    .success-container {
+                        background-color: white;
+                        border-radius: 8px;
+                        padding: 40px;
+                        max-width: 90%;
+                        width: 600px;
+                        text-align: center;
+                        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                    }
+                    
+                    .success-icon {
+                        font-size: 80px;
+                        color: #4CAF50;
+                        margin-bottom: 20px;
+                    }
+                    
+                    .success-container h1 {
+                        color: #333;
+                        margin: 0 0 20px 0;
+                        font-size: 32px;
+                    }
+                    
+                    .success-container p {
+                        color: #666;
+                        margin-bottom: 30px;
+                        line-height: 1.6;
+                        font-size: 18px;
+                    }
+                    
+                    .success-container button {
+                        background-color: #1abc9c;
+                        color: white;
+                        border: none;
+                        padding: 12px 30px;
+                        border-radius: 4px;
+                        font-size: 18px;
+                        cursor: pointer;
+                        transition: background-color 0.3s;
+                    }
+                    
+                    .success-container button:hover {
+                        background-color: #16a085;
+                    }
+                </style>
+            `;
         } else {
             throw new Error('שגיאה בהגשת המבחן');
         }
     } catch (error) {
         console.error('שגיאה בהגשת המבחן:', error);
-        showModal({
-            title: 'שגיאה בהגשת המבחן',
-            message: error.message || 'אירעה שגיאה בהגשת המבחן. אנא נסה שוב.',
-            icon: 'error'
-        });
-    } finally {
         hideLoading();
+        alert('שגיאה בהגשת המבחן: ' + (error.message || 'אירעה שגיאה בהגשת המבחן. אנא נסה שוב.'));
     }
 }
 
@@ -335,25 +407,44 @@ function initializeEventListeners() {
         validateBranch(branchInput);
     });
 
-    // כפתורי ניווט במבחן
+    // עדכון פונקציית prevQuestion לטיפול בביטול המבחן
     document.getElementById('prevQuestion').addEventListener('click', () => {
         if (currentQuestionIndex === 0) {
             // אם זו השאלה הראשונה, נראה חלון אישור לביטול המבחן
-            showModal({
-                title: 'ביטול מבחן',
-                message: 'האם אתה בטוח שברצונך לבטל את המבחן?',
-                icon: 'warning',
-                confirmText: 'כן, בטל מבחן',
-                cancelText: 'לא, המשך מבחן',
-                onConfirm: () => {
-                    // חזרה לטופס ההרשמה
-                    document.getElementById('quiz-section').classList.add('hidden');
-                    document.getElementById('registration-form').classList.remove('hidden');
-                    // איפוס נתוני המבחן
-                    currentQuestions = [];
-                    userAnswers = [];
-                    currentQuestionIndex = 0;
-                }
+            // יצירת דיאלוג מותאם אישית לביטול המבחן
+            const cancelDialogHTML = `
+                <div id="cancel-dialog" class="custom-dialog">
+                    <div class="dialog-content">
+                        <div class="dialog-header">
+                            <span class="material-icons warning-icon">warning</span>
+                            <h2>ביטול מבחן</h2>
+                        </div>
+                        <p>האם אתה בטוח שברצונך לבטל את המבחן?</p>
+                        <div class="dialog-buttons">
+                            <button id="continue-quiz" class="secondary-button">לא, המשך מבחן</button>
+                            <button id="cancel-quiz" class="primary-button">כן, בטל מבחן</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // הוספת הדיאלוג לדף
+            document.body.insertAdjacentHTML('beforeend', cancelDialogHTML);
+            
+            // הוספת מאזיני אירועים לכפתורים
+            document.getElementById('cancel-quiz').addEventListener('click', () => {
+                document.getElementById('cancel-dialog').remove();
+                // חזרה לטופס ההרשמה
+                document.getElementById('quiz-section').classList.add('hidden');
+                document.getElementById('registration-form').classList.remove('hidden');
+                // איפוס נתוני המבחן
+                currentQuestions = [];
+                userAnswers = [];
+                currentQuestionIndex = 0;
+            });
+            
+            document.getElementById('continue-quiz').addEventListener('click', () => {
+                document.getElementById('cancel-dialog').remove();
             });
             return;
         }
@@ -643,4 +734,94 @@ function resetQuiz() {
         '<span class="progress-text">שאלה <span id="currentQuestion">1</span> מתוך <span id="totalQuestions">10</span></span>';
     showCurrentQuestion();
     updateProgress();
-} 
+}
+
+// הוספת סגנונות לדיאלוגים המותאמים אישית
+const customDialogStyles = `
+<style id="custom-dialog-styles">
+    .custom-dialog {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+    
+    .dialog-content {
+        background-color: white;
+        border-radius: 8px;
+        padding: 30px;
+        max-width: 90%;
+        width: 500px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .dialog-header {
+        margin-bottom: 20px;
+    }
+    
+    .warning-icon {
+        font-size: 50px;
+        color: #FFC107;
+        margin-bottom: 10px;
+    }
+    
+    .dialog-content h2 {
+        color: #333;
+        margin: 0 0 10px 0;
+        font-size: 22px;
+    }
+    
+    .dialog-content p {
+        color: #666;
+        margin-bottom: 25px;
+        line-height: 1.6;
+        font-size: 16px;
+    }
+    
+    .dialog-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
+    
+    .primary-button {
+        background-color: #1abc9c;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    .secondary-button {
+        background-color: #f1f1f1;
+        color: #333;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    .primary-button:hover {
+        background-color: #16a085;
+    }
+    
+    .secondary-button:hover {
+        background-color: #e0e0e0;
+    }
+</style>
+`;
+
+// הוספת הסגנונות לדף
+document.head.insertAdjacentHTML('beforeend', customDialogStyles); 
