@@ -577,19 +577,21 @@ body.scrolled .theme-toggle {
 }
 
 .modal {
-    background: white;
-    padding: 2rem;
-    border-radius: var(--radius-md);
-    max-width: 90%;
-    width: 400px;
-    position: relative;
-    transform: translateY(-20px);
-    transition: all 0.3s;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    display: none;
+    position: fixed;
+    z-index: 999;
+    padding: 20px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.9);
 }
 
 .modal-overlay.active .modal {
-    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
 }
 
 .modal-header {
@@ -611,9 +613,11 @@ body.scrolled .theme-toggle {
 }
 
 .modal-content {
-    margin-bottom: 1.5rem;
-    line-height: 1.6;
-    text-align: center;
+    margin: auto;
+    display: block;
+    max-width: 90%;
+    max-height: 90vh;
+    object-fit: contain;
 }
 
 .modal-actions {
@@ -1469,6 +1473,12 @@ input.invalid:focus {
 .winners-container {
     display: grid;
     gap: 1.5rem;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.winners-container.fade {
+    opacity: 0;
 }
 
 .winner-card {
@@ -2145,4 +2155,128 @@ footer {
         padding: 15px;
         max-height: 50vh;
     }
+}
+
+/* סגנונות לכפתורי הסינון */
+.filter-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.filter-button {
+    padding: 8px 16px;
+    border: 2px solid var(--primary-color);
+    border-radius: 20px;
+    background: transparent;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.filter-button.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.filter-button:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* עדכון סגנון למכל הזוכים */
+.winners-container {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.winners-container.fade {
+    opacity: 0;
+}
+
+/* עיצוב מכל התמונה */
+.winners-image-container {
+    position: relative;
+    margin: 20px auto;
+    max-width: 800px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 4px 15px var(--shadow-color);
+    background: #000;
+}
+
+.winners-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    position: relative;
+}
+
+/* כפתור מסך מלא */
+.fullscreen-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+    padding: 0;
+    z-index: 2;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.fullscreen-button:hover {
+    background: rgba(0, 0, 0, 0.8);
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.fullscreen-button .material-icons {
+    font-size: 24px;
+    color: white;
+}
+
+/* התאמה למובייל */
+@media screen and (max-width: 768px) {
+    .winners-image-container {
+        margin: 15px -15px;
+        border-radius: 0;
+    }
+
+    .fullscreen-button {
+        top: 5px;
+        left: 5px;
+        width: 35px;
+        height: 35px;
+    }
+
+    .fullscreen-button .material-icons {
+        font-size: 20px;
+    }
+}
+
+.close-button {
+    position: absolute;
+    right: 35px;
+    top: 15px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-button:hover {
+    color: #bbb;
 } 

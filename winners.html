@@ -60,6 +60,24 @@
                 <h1>זוכי המבחן השבועי</h1>
             </div>
             
+            <!-- תמונת הזוכים -->
+            <div class="winners-image-container">
+                <img src="assets/images/zohim_m1.jpg" alt="זוכי המבחן השבועי" class="winners-image">
+                <button class="fullscreen-button" onclick="openFullscreen('assets/images/zohim_m1.jpg')">
+                    <span class="material-icons">fullscreen</span>
+                </button>
+            </div>
+
+            <!-- מודל להצגת התמונה במסך מלא -->
+            <div id="fullscreenModal" class="modal">
+                <span class="close-button" onclick="closeFullscreen()">&times;</span>
+                <img class="modal-content" id="fullscreenImage">
+            </div>
+            
+            <div id="filter-buttons" class="filter-buttons">
+                <!-- הכפתורים יתווספו דינמית על ידי JavaScript -->
+            </div>
+            
             <div id="winners-container" class="winners-container">
                 <!-- תוכן דינמי יוכנס כאן -->
             </div>
