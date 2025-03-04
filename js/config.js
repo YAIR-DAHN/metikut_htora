@@ -6,8 +6,8 @@ const CONFIG = {
 
     // הגדרות מבחן לא עובד מכאן
     quiz: {
-        // isAvailable: false,  // האם המבחן זמין כרגע
-        isAvailable: true,  // האם המבחן זמין כרגע
+        isAvailable: false,  // האם המבחן זמין כרגע
+        // isAvailable: true,  // האם המבחן זמין כרגע
         nextQuizDate: '2024-03-04',  // תאריך המבחן הבא
         hebrewDate: "ד' אדר",  // תאריך עברי
         displayDate: "04.3",  // תאריך לתצוגה
