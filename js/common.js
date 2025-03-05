@@ -312,4 +312,62 @@ function showContactInfo() {
         confirmText: 'סגור',
         icon: 'contact_support'
     });
-} 
+}
+
+// פונקציות להצגת מודאל תמונה
+function openImageModal(src) {
+    // יצירת המודאל אם לא קיים
+    let modal = document.querySelector('.image-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.className = 'image-modal';
+        modal.innerHTML = `
+            <button class="close-modal" onclick="closeImageModal()">
+                <span class="material-icons">close</span>
+            </button>
+            <img class="modal-image" src="" alt="תמונה מוגדלת">
+        `;
+        document.body.appendChild(modal);
+
+        // סגירת המודאל בלחיצה על הרקע
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeImageModal();
+            }
+        });
+
+        // סגירת המודאל בלחיצה על ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeImageModal();
+            }
+        });
+    }
+
+    // עדכון התמונה והצגת המודאל
+    const modalImage = modal.querySelector('.modal-image');
+    modalImage.src = src;
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeImageModal() {
+    const modal = document.querySelector('.image-modal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+}
+
+// הוספת מאזיני לחיצה לכרטיסי המודעות
+document.addEventListener('DOMContentLoaded', () => {
+    const adCards = document.querySelectorAll('.ad-card');
+    adCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const image = card.querySelector('.ad-image');
+            if (image) {
+                openImageModal(image.src);
+            }
+        });
+    });
+}); 

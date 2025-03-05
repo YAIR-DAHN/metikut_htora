@@ -2279,4 +2279,145 @@ footer {
 
 .close-button:hover {
     color: #bbb;
+}
+
+/* עיצוב אזור מודעות */
+.ads-section {
+    margin: 3rem 0;
+}
+
+.ads-container {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    padding: 1rem;
+}
+
+.ad-card {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 4px 15px var(--shadow-color);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: #000;
+}
+
+.ad-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px var(--shadow-color);
+}
+
+.ad-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.ad-card:hover .ad-image {
+    transform: scale(1.05);
+}
+
+.ad-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    color: white;
+    gap: 0.5rem;
+}
+
+.ad-card:hover .ad-overlay {
+    opacity: 1;
+}
+
+.ad-overlay .material-icons {
+    font-size: 2rem;
+}
+
+.ad-overlay span:last-child {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* מודאל להצגת תמונה מוגדלת */
+.image-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-image {
+    max-width: 90%;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+}
+
+.close-modal {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.close-modal:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* התאמה למובייל */
+@media screen and (max-width: 768px) {
+    .ads-container {
+        gap: 1rem;
+        padding: 0.5rem;
+    }
+
+    .ad-overlay {
+        opacity: 1;
+        background: rgba(0, 0, 0, 0.3);
+    }
+
+    .ad-overlay .material-icons {
+        font-size: 1.5rem;
+    }
+
+    .ad-overlay span:last-child {
+        font-size: 0.9rem;
+    }
+
+    .close-modal {
+        top: 10px;
+        right: 10px;
+        width: 35px;
+        height: 35px;
+    }
 } 

@@ -23,11 +23,13 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dark-mode.css">
+    <link rel="stylesheet" href="css/carousel.css">
     <script src="js/config.js"></script>
     <script src="js/common.js"></script>
     <script src="js/updates.js"></script>
     <script src="js/animations.js"></script>
     <script src="js/viewer.js"></script>
+    <script src="js/carousel.js"></script>
     <script src="js/main.js"></script>
 </head>
 
@@ -85,10 +87,48 @@
                 <span class="material-icons">menu_book</span>
                 חומרי לימוד
             </a>
-            
-            
+
+
         </nav>
-    
+
+        <!-- אזור מודעות -->
+        <section id="ads-section" class="ads-section animate-on-scroll">
+            <h2 class="section-title">
+                <span class="material-icons">campaign</span>
+                לוח מודעות
+            </h2>
+            <div class="carousel-container">
+                <div class="carousel-wrapper">
+                    <div class="carousel-slides">
+                        <div class="carousel-slide">
+                            <div class="ad-card">
+                                <img src="assets/ads/moda_gmar.jpg" alt="מודעת סיום" class="ad-image">
+                                <div class="ad-overlay">
+                                    <span class="material-icons">fullscreen</span>
+                                    <span>לחץ להגדלה</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="carousel-slide">
+                            <div class="ad-card">
+                                <img src="assets/ads/moda_gmar.jpg" alt="מודעת סיום" class="ad-image">
+                                <div class="ad-overlay">
+                                    <span class="material-icons">fullscreen</span>
+                                    <span>לחץ להגדלה</span>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                    <button class="carousel-button prev">
+                        <span class="material-icons">chevron_right</span>
+                    </button>
+                    <button class="carousel-button next">
+                        <span class="material-icons">chevron_left</span>
+                    </button>
+                </div>
+                <div class="carousel-dots"></div>
+            </div>
+        </section>
 
         <!-- אזור עדכונים -->
         <section class="updates-section animate-on-scroll">
@@ -103,6 +143,7 @@
                 </div>
             </div>
         </section>
+
 
         <!-- שאלות נפוצות -->
         <section class="faq-section animate-on-scroll" id="faq-section">
@@ -161,11 +202,7 @@
                     צפייה בחוברת
                 </h3>
                 <div class="book-viewer">
-                    <iframe 
-                        id="bookFrame"
-                        src="turn.js/hoveret/hoveret.html"
-                        frameborder="0"
-                        allowfullscreen
+                    <iframe id="bookFrame" src="turn.js/hoveret/hoveret.html" frameborder="0" allowfullscreen
                         title="חוברת מתיקות התורה">
                     </iframe>
                     <!-- <button class="expand-button" onclick="expandViewer()">

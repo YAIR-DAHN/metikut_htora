@@ -344,7 +344,7 @@ async function submitQuizToServer() {
         
         if (result.success) {
             showModal({
-                title: 'אשריך!',
+                title: 'b dcvasxcddcdffvvbbbbn  c!',
                 message: 'התשובות נקלטו בהצלחה! הודעות ישלחו לזוכים',
                 icon: 'check_circle',
                 onConfirm: () => {
