@@ -141,7 +141,7 @@ async function submitQuizToServer() {
                     <div class="success-container">
                         <span class="material-icons success-icon">check_circle</span>
                         <h1>אשריך!</h1>
-                        <p>סיימת את המבחן השבועי, הזוכים יפורסמו באתר, ועכשיו לא לשכוח ההספק השבועי דף לד: ממשיכים בכל הכח כי אין דבר מתוק יותר מדף גמרא, תנועת הנוער "אור ישראלי" מיזם מתיקות התורה</p>
+                        <p>סיימת את המבחן השבועי, הזוכים יפורסמו באתר, ועכשיו לא לשכוח ההספק השבועי דף לה: ממשיכים בכל הכח כי אין דבר מתוק יותר מדף גמרא, תנועת הנוער "אור ישראלי" מיזם מתיקות התורה</p>
                         <button onclick="window.location.href='index.html'">חזרה לדף הבית</button>
                     </div>
                 </div>
@@ -502,7 +502,19 @@ function showQuestion(index) {
         }
     });
     
+    // הוספת ההקדמה לפני השאלות הראשונות
+    let introductionHTML = '';
+    if (index === 0 && CONFIG.quiz.introductionText) {
+        introductionHTML = `
+            <div class="quiz-introduction">
+                <h3>הקדמה חשובה לשאלות הבאות</h3>
+                <p>${CONFIG.quiz.introductionText}</p>
+            </div>
+        `;
+    }
+    
     container.innerHTML = `
+        ${introductionHTML}
         <div class="question">
             <h3>${question.question}</h3>
             ${question.type === 'אמריקאי' ? 

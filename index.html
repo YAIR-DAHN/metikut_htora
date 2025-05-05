@@ -18,6 +18,8 @@
     <link rel="icon" type="image/png" href="./assets/logos/or-israeli-logo.png">
     <link rel="apple-touch-icon" href="./assets/logos/or-israeli-logo.png">
 
+    <!-- הוספת VideoJS -->
+    <link href="https://vjs.zencdn.net/8.5.2/video-js.css" rel="stylesheet" />
 
     <title>מתיקות התורה</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -106,6 +108,31 @@
                                 <div class="ad-overlay">
                                     <span class="material-icons">fullscreen</span>
                                     <span>לחץ להגדלה</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-slide">
+                            <div class="ad-card video-card">
+                                <div class="video-container">
+                                    <video
+                                        id="carouselVideo"
+                                        class="video-js vjs-default-skin ad-video"
+                                        controls
+                                        preload="auto"
+                                        data-setup='{
+                                            "fluid": true,
+                                            "controls": true,
+                                            "autoplay": false,
+                                            "preload": "auto"
+                                        }'
+                                    >
+                                        <source src="assets/video/VID1.mp4" type="video/mp4">
+                                        הדפדפן שלך לא תומך בתגית וידאו.
+                                    </video>
+                                </div>
+                                <div class="ad-overlay">
+                                    <span class="material-icons">play_circle_filled</span>
+                                    <span>לחץ לצפייה</span>
                                 </div>
                             </div>
                         </div>
@@ -265,6 +292,32 @@
     <footer>
         <p class="footer-credit" onclick="showContactInfo()">נבנה ע"י Y.D. Systems</p>
     </footer>
+
+    <!-- וידאו JS -->
+    <script src="https://vjs.zencdn.net/8.5.2/video.min.js"></script>
+    <script>
+        // אתחול VideoJS כשהדף נטען
+        document.addEventListener('DOMContentLoaded', function() {
+            if (document.getElementById('carouselVideo')) {
+                const player = videojs('carouselVideo');
+                const overlay = document.querySelector('.video-card .ad-overlay');
+                
+                if (overlay) {
+                    overlay.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        player.play();
+                        overlay.style.opacity = '0';
+                        overlay.style.visibility = 'hidden';
+                    });
+                    
+                    player.on('ended', function() {
+                        overlay.style.opacity = '1';
+                        overlay.style.visibility = 'visible';
+                    });
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>
