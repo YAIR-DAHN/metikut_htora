@@ -93,79 +93,54 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// הוספת טיפול בסרטונים בקרוסלה
+// טיפול בלחיצה על תמונות וידאו בקרוסלה
 document.addEventListener('DOMContentLoaded', function() {
-    // טיפול בלחיצה על סרטונים בקרוסלה
-    const videoCards = document.querySelectorAll('.video-card');
+    // טיפול בלחיצה על תמונות וידאו בקרוסלה
+    const videoImages = document.querySelectorAll('.ad-image[data-video-src]');
     
-    videoCards.forEach(card => {
-        const videoContainer = card.querySelector('.video-container');
-        const video = card.querySelector('video');
-        const overlay = card.querySelector('.ad-overlay');
+    videoImages.forEach(image => {
+        const card = image.closest('.ad-card');
         
-        if (!video || !overlay) return;
-        
-        // הסרת האפשרות autoplay/muted לאחר טעינה (כדי שהמשתמש יוכל לשלוט בווידאו)
-        video.addEventListener('loadeddata', function() {
-            console.log('וידאו נטען בהצלחה');
-            video.muted = false;
-            video.autoplay = false;
-            video.pause();
-        });
-        
-        video.addEventListener('error', function(e) {
-            console.error('שגיאה בטעינת הוידאו:', e);
-        });
-        
-        // בדיקה אם הוידאו כבר התחיל לנגן
-        video.addEventListener('playing', function() {
-            overlay.style.opacity = '0';
-            overlay.style.visibility = 'hidden';
-            console.log('הוידאו מנגן');
-        });
-        
-        // טיפול בלחיצה על האוברליי
-        overlay.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            try {
-                // הפעלה מחדש בכל מקרה כדי לוודא שהוידאו מתחיל
-                video.currentTime = 0;
-                video.muted = false;
-                const playPromise = video.play();
+        if (card) {
+            card.addEventListener('click', function() {
+                const videoSrc = image.getAttribute('data-video-src');
                 
-                if (playPromise !== undefined) {
-                    playPromise.then(() => {
-                        overlay.style.opacity = '0';
-                        overlay.style.visibility = 'hidden';
-                    }).catch(err => {
-                        console.error('שגיאה בהפעלת הוידאו:', err);
-                        // ננסה שוב עם השתקה (דפדפנים רבים דורשים זאת)
-                        video.muted = true;
-                        video.play().catch(e => console.error('שגיאה גם עם muted:', e));
-                    });
+                // ניקוי מודאל קודם אם קיים
+                const existingModal = document.getElementById('videoModal');
+                if (existingModal) {
+                    document.body.removeChild(existingModal);
                 }
-            } catch (err) {
-                console.error('שגיאה בניגון הוידאו:', err);
-            }
-        });
-        
-        // טיפול בסיום הוידאו
-        video.addEventListener('ended', function() {
-            overlay.style.opacity = '1';
-            overlay.style.visibility = 'visible';
-            video.currentTime = 0;
-        });
-        
-        // טיפול בלחיצה ישירה על הוידאו כדי לעצור אותו
-        video.addEventListener('click', function(e) {
-            e.stopPropagation();
-            if (!video.paused) {
-                video.pause();
-                overlay.style.opacity = '1';
-                overlay.style.visibility = 'visible';
-            }
-        });
+                
+                // יצירת מודאל חדש
+                const modal = document.createElement('div');
+                modal.id = 'videoModal';
+                modal.className = 'video-modal';
+                
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <span class="close-video-modal">&times;</span>
+                        <video controls autoplay>
+                            <source src="${videoSrc}" type="video/mp4">
+                            הדפדפן שלך לא תומך בתגית וידאו.
+                        </video>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                
+                // הגדרת סגירת המודאל
+                const closeButton = modal.querySelector('.close-video-modal');
+                closeButton.addEventListener('click', function() {
+                    document.body.removeChild(modal);
+                });
+                
+                // סגירה בלחיצה מחוץ לתוכן
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        document.body.removeChild(modal);
+                    }
+                });
+            });
+        }
     });
 }); 

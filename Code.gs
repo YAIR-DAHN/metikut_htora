@@ -5,12 +5,22 @@ const ANSWERS_SHEET_NAME = 'תשובות';
 const BRANCHES_SHEET_NAME = 'סניפים';
 const WINNERS_SHEET_NAME = 'זוכים';
 const UPDATES_SHEET_NAME = 'עדכונים';
+const REGISTRATION_SHEET_NAME = 'רישום'; // גיליון חדש לרישום
 
 function doGet(e) {
   const response = ContentService.createTextOutput()
     .setMimeType(ContentService.MimeType.JSON)
     .setContent(JSON.stringify(handleRequest(e)));
   
+  // הוספת כותרות CORS כדי לאפשר גישה מכל דומיין
+  return addCorsHeaders(response);
+}
+
+// פונקציה להוספת כותרות CORS
+function addCorsHeaders(response) {
+  response.setHeader('Access-Control-Allow-Origin', '*');
+  response.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+  response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   return response;
 }
 
@@ -55,6 +65,16 @@ function handleRequest(e) {
       }
       return result;
       
+    case 'submitRegistration':
+      if (!data) {
+        return { error: 'No data provided' };
+      }
+      const regResult = submitRegistration(data.userDetails);
+      if (!regResult.success) {
+        return { error: regResult.error || 'Failed to submit registration' };
+      }
+      return regResult;
+      
     case 'getWinners':
       return getWinners();
       
@@ -69,7 +89,12 @@ function handleRequest(e) {
 }
 
 function doPost(e) {
-  return doGet(e);
+  // טיפול בבקשות POST עם אותן כותרות CORS
+  const response = ContentService.createTextOutput()
+    .setMimeType(ContentService.MimeType.JSON)
+    .setContent(JSON.stringify(handleRequest(e)));
+  
+  return addCorsHeaders(response);
 }
 
 // פונקציה להחזרת רשימת הסניפים
@@ -172,6 +197,55 @@ function testConnection() {
   }
 }
 
+// פונקציה לשמירת פרטי רישום
+function submitRegistration(userDetails) {
+  console.log("קבלת בקשת רישום:", JSON.stringify(userDetails));
+  
+  if (!userDetails || !userDetails.userName || !userDetails.branch || !userDetails.phone) {
+    console.error("חסרים פרטי משתמש:", JSON.stringify(userDetails));
+    return {
+      success: false,
+      error: 'חסרים פרטי משתמש'
+    };
+  }
+
+  try {
+    // בדיקה אם קיים גיליון רישום, ואם לא - יוצרים אותו
+    let ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    let registrationSheet = ss.getSheetByName(REGISTRATION_SHEET_NAME);
+    
+    if (!registrationSheet) {
+      console.log("יוצר גיליון רישום חדש");
+      registrationSheet = ss.insertSheet(REGISTRATION_SHEET_NAME);
+      registrationSheet.getRange('A1:D1').setValues([['תאריך', 'שם', 'סניף', 'טלפון']]);
+      registrationSheet.setFrozenRows(1);
+    }
+    
+    const timestamp = new Date();
+    console.log("הוספת שורה חדשה לגיליון רישום");
+    
+    // שמירת פרטי הרישום
+    registrationSheet.appendRow([
+      timestamp,
+      userDetails.userName,
+      userDetails.branch,
+      userDetails.phone
+    ]);
+    
+    console.log("רישום הושלם בהצלחה עבור:", userDetails.userName);
+    return {
+      success: true,
+      message: 'הרישום הושלם בהצלחה'
+    };
+  } catch (error) {
+    console.error('שגיאת רישום:', error.toString());
+    return {
+      success: false,
+      error: 'שגיאה בשמירת פרטי הרישום: ' + error.toString()
+    };
+  }
+}
+
 // נוסיף פונקציה שתיצור את המבנה הבסיסי של הגיליון אם הוא לא קיים
 function setupSpreadsheet() {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
@@ -195,6 +269,14 @@ function setupSpreadsheet() {
   if (!answersSheet) {
     answersSheet = ss.insertSheet(ANSWERS_SHEET_NAME);
     answersSheet.getRange('A1:E1').setValues([['תאריך', 'שם', 'סניף', 'טלפון', 'ציון']]);
+  }
+  
+  // הגדרת גיליון רישום
+  let registrationSheet = ss.getSheetByName(REGISTRATION_SHEET_NAME);
+  if (!registrationSheet) {
+    registrationSheet = ss.insertSheet(REGISTRATION_SHEET_NAME);
+    registrationSheet.getRange('A1:D1').setValues([['תאריך', 'שם', 'סניף', 'טלפון']]);
+    registrationSheet.setFrozenRows(1);
   }
   
   return "Spreadsheet setup completed";

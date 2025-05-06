@@ -1,4 +1,4 @@
-const API_URL = 'https://script.google.com/macros/s/AKfycbzukUmXo8t_pL4QzFnafDBf1rzOEQaTZMS_FU0OF1sTFac4d_5HVsf3ZjJOlKlWACBh7g/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxMTBghOkhhxWPNFNoQ6bLqwTyObdw46uqd7ReJDzpnBowcXfBW-VyF6ZzKbtKOIr451A/exec';
 
 // קאש לנתונים
 const cache = {

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="רישום למיזם מתיקות התורה - לימוד משותף של פרק המפקיד">
+    <meta name="keywords" content="מתיקות התורה, פרק המפקיד, רישום, אור ישראלי">
+    <meta property="og:title" content="מתיקות התורה - רישום למיזם">
+    <meta property="og:description" content="רישום למיזם מתיקות התורה - לימוד משותף של פרק המפקיד">
+    <meta name="theme-color" content="#1abc9c" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1abc9c" media="(prefers-color-scheme: dark)">
+    <meta name="msapplication-navbutton-color" content="#1abc9c">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#1abc9c">
+
+    <link rel="icon" type="image/png" href="./assets/logos/or-israeli-logo.png">
+    <link rel="apple-touch-icon" href="./assets/logos/or-israeli-logo.png">
+
+    <title>מתיקות התורה - רישום למיזם</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dark-mode.css">
+    <script src="js/config.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/register.js"></script>
+</head>
+
+<body>
+    <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+        <p>טוען...</p>
+    </div>
+    <header>
+        <div class="logo-container">
+            <div class="secondary-logo">
+                <img src="assets/logos/or-israeli-logo.png" alt="אור ישראלי">
+            </div>
+            <div class="main-logo">
+                <img src="assets/logos/metikut-hatorah-logo.png" alt="מתיקות התורה">
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- כפתור חזרה לדף הבית -->
+        <div class="back-button-container">
+            <a href="index.html" class="back-button">
+                <span class="material-icons">home</span>
+                חזרה לדף הבית
+            </a>
+        </div>
+
+        <!-- סרטון וידאו -->
+        <section id="video-section" class="active-section">
+            <!-- <div class="form-header">
+                <h2>צפייה בסרטון</h2>
+                <p>למידע על המיזם, אנא צפו בסרטון. ניתן לעבור לטופס הרישום בכל שלב</p>
+            </div> -->
+            <div class="video-wrapper">
+                <video id="registration-video" controls poster="assets/ads/video_thumbnail.jpg">
+                    <source src="https://files.catbox.moe/a7ywjo.mp4" type="video/mp4">
+                    הדפדפן שלך לא תומך בתגית וידאו.
+                </video>
+                <div class="video-controls">
+                    <a href="#" id="continue-to-form" class="primary-button" onclick="showRegistrationForm(); return false;">
+                        המשך לטופס הרישום <span class="material-icons">arrow_back</span>
+                    </a>
+                    <p class="control-hint">לפרטים נוספים על המיזם, פנה לרב הסניף</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- טופס הרשמה -->
+        <section id="registration-form" class="hidden">
+            <div class="form-header">
+                <h2>רישום למיזם מתיקות התורה</h2>
+                <p>אנא מלאו את הפרטים הבאים כדי להירשם למיזם</p>
+            </div>
+            <form id="userRegistrationForm" onsubmit="handleFormSubmit(event)">
+                <div class="form-group">
+                    <label for="userName">שם מלא</label>
+                    <input type="text" id="userName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="branch">סניף</label>
+                    <div class="branch-search-container">
+                        <input type="text" id="branch" required placeholder="הקלד לחיפוש סניף...">
+                        <div class="branch-results"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">מספר טלפון</label>
+                    <input type="tel" id="phone" pattern="[0-9]{10}" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-wrapper">
+                        <input type="checkbox" id="termsAgreement" required>
+                        <span class="checkbox-custom"></span>
+                        אני מאשר את <span id="show-terms" class="terms-link">תנאי התקנון</span>
+                    </label>
+                </div>
+
+                <button type="submit" id="submitRegistrationButton">שלח פרטים</button>
+            </form>
+        </section>
+
+        <!-- חלון קופץ לתקנון -->
+        <div id="terms-modal" class="modal-overlay">
+            <div class="terms-modal-content">
+                <span class="close-terms-modal">&times;</span>
+                <h2>תקנון המיזם</h2>
+                <div class="terms-content">
+                    <h3>כללי המיזם</h3>
+                    <p>
+                        1. המיזם מיועד לנערים הלומדים ב"אור ישראלי".<br>
+                        2. הלימוד מתבצע בפרק 'המפקיד' מסכת בבא מציעא.<br>
+                        3. מדי שבוע יתקיים מבחן על החומר הנלמד.<br>
+                        4. במבחן הגמר ייבחרו נערים מצטיינים להיבחן ע"י גדולי ישראל.<br>
+                        5. הפרטים שתמסרו ישמשו אך ורק למטרות המיזם ולא יועברו לגורמים שלישיים.
+                    </p>
+                    
+                    <h3>זכאות להשתתפות</h3>
+                    <p>
+                        1. על הנרשם להתמיד בלימוד השבועי.<br>
+                        2. על הנרשם להשתתף במבחנים השבועיים.<br>
+                        3. הזוכים בפרסים השבועיים יבחרו בהגרלה מבין מסיימי המבחן.<br>
+                        4. הזכייה בהגרלה כפופה לשיקול דעת הרבנים.<br>
+                        5. ההשתתפות מותנית בהגעה לאירוע הגמר ובפעילויות אור ישראלי.<br>
+                        6. הרישום מהווה הסכמה לקבלת הודעות מאור ישראלי.
+                    </p>
+                </div>
+                <button id="accept-terms" class="primary-button">מאשר את התקנון</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p class="footer-credit" onclick="showContactInfo()">נבנה ע"י Y.D. Systems</p>
+    </footer>
+</body>
+
+<script>
+    // פונקציה פשוטה להצגת טופס הרישום
+    function showRegistrationForm() {
+        console.log("פונקציית מעבר לטופס הופעלה");
+        document.getElementById('video-section').classList.add('hidden');
+        document.getElementById('registration-form').classList.remove('hidden');
+    }
+
+    // טיפול בשליחת הטופס
+    function handleFormSubmit(event) {
+        event.preventDefault();
+        console.log("טופס נשלח דרך פונקציית הטיפול המקומית");
+        
+        // בדיקת תקינות הסניף
+        const branchInput = document.getElementById('branch');
+        if (typeof validateBranch === 'function' && !validateBranch(branchInput)) {
+            return;
+        }
+        
+        const userDetails = {
+            userName: document.getElementById('userName').value,
+            branch: document.getElementById('branch').value,
+            phone: document.getElementById('phone').value
+        };
+        
+        console.log("פרטי משתמש לשליחה:", userDetails);
+        
+        // קריאה לפונקציה בקובץ החיצוני
+        if (typeof submitRegistration === 'function') {
+            submitRegistration(userDetails);
+        } else {
+            console.error("פונקציית submitRegistration לא נמצאה");
+            alert("שגיאה בשליחת הטופס. אנא רענן את הדף ונסה שוב.");
+        }
+    }
+
+    // בדיקה שהאלמנטים קיימים בדף
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("דף נטען");
+        // בדיקת קיום אלמנטים
+        const videoSection = document.getElementById('video-section');
+        const registrationForm = document.getElementById('registration-form');
+        const continueButton = document.getElementById('continue-to-form');
+        
+        console.log("אלמנט וידאו נמצא:", !!videoSection);
+        console.log("אלמנט טופס נמצא:", !!registrationForm);
+        console.log("כפתור המשך נמצא:", !!continueButton);
+        
+        // הסתרת חלון התקנון
+        const termsModal = document.getElementById('terms-modal');
+        if (termsModal) {
+            termsModal.style.display = 'none';
+            termsModal.style.opacity = '0';
+            termsModal.style.visibility = 'hidden';
+        }
+    });
+</script>
+
+</html> 
