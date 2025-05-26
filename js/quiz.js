@@ -141,7 +141,7 @@ async function submitQuizToServer() {
                     <div class="success-container">
                         <span class="material-icons success-icon">check_circle</span>
                         <h1>אשריך!</h1>
-                        <p>סיימת את המבחן השבועי, הזוכים יפורסמו באתר, ועכשיו לא לשכוח ההספק השבועי דף לו. ממשיכים בכל הכח כי אין דבר מתוק יותר מדף גמרא, תנועת הנוער "אור ישראלי" מיזם מתיקות התורה</p>
+                        <p>סיימת את המבחן השבועי, הזוכים יפורסמו באתר, ועכשיו לא לשכוח ההספק השבועי דף לו: ממשיכים בכל הכח כי אין דבר מתוק יותר מדף גמרא, תנועת הנוער "אור ישראלי" מיזם מתיקות התורה</p>
                         <button onclick="window.location.href='index.html'">חזרה לדף הבית</button>
                     </div>
                 </div>
