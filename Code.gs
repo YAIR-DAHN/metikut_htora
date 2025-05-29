@@ -6,6 +6,8 @@ const BRANCHES_SHEET_NAME = 'סניפים';
 const WINNERS_SHEET_NAME = 'זוכים';
 const UPDATES_SHEET_NAME = 'עדכונים';
 const REGISTRATION_SHEET_NAME = 'רישום'; // גיליון חדש לרישום
+const PODCAST_LOTTERY_SHEET_NAME = 'פודקאסט הגרלה';
+const PODCAST_LISTENS_SHEET_NAME = 'האזנות פודקאסט';
 
 function doGet(e) {
   const response = ContentService.createTextOutput()
@@ -74,6 +76,26 @@ function handleRequest(e) {
         return { error: regResult.error || 'Failed to submit registration' };
       }
       return regResult;
+      
+    case 'submitPodcastLottery':
+      if (!data) {
+        return { error: 'No data provided' };
+      }
+      const lotteryResult = submitPodcastLottery(data.userDetails);
+      if (!lotteryResult.success) {
+        return { error: lotteryResult.error || 'Failed to submit lottery entry' };
+      }
+      return lotteryResult;
+      
+    case 'savePodcastListen':
+      if (!data) {
+        return { error: 'No data provided' };
+      }
+      const listenResult = savePodcastListen(data.listenData);
+      if (!listenResult.success) {
+        return { error: listenResult.error || 'Failed to save listen data' };
+      }
+      return listenResult;
       
     case 'getWinners':
       return getWinners();
@@ -246,6 +268,102 @@ function submitRegistration(userDetails) {
   }
 }
 
+// פונקציה לשמירת פרטי הגרלת פודקאסט
+function submitPodcastLottery(userDetails) {
+  console.log("קבלת בקשת הגרלת פודקאסט:", JSON.stringify(userDetails));
+  
+  if (!userDetails || !userDetails.userName || !userDetails.branch || !userDetails.phone || !userDetails.episode) {
+    console.error("חסרים פרטי משתמש:", JSON.stringify(userDetails));
+    return {
+      success: false,
+      error: 'חסרים פרטי משתמש'
+    };
+  }
+
+  try {
+    // בדיקה אם קיים גיליון הגרלת פודקאסט, ואם לא - יוצרים אותו
+    let ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    let lotterySheet = ss.getSheetByName(PODCAST_LOTTERY_SHEET_NAME);
+    
+    if (!lotterySheet) {
+      console.log("יוצר גיליון הגרלת פודקאסט חדש");
+      lotterySheet = ss.insertSheet(PODCAST_LOTTERY_SHEET_NAME);
+      lotterySheet.getRange('A1:E1').setValues([['תאריך', 'שם', 'טלפון', 'סניף', 'פרק']]);
+      lotterySheet.setFrozenRows(1);
+    }
+    
+    const timestamp = new Date();
+    console.log("הוספת רישום להגרלה עבור:", userDetails.userName);
+    
+    // שמירת פרטי ההגרלה
+    lotterySheet.appendRow([
+      timestamp,
+      userDetails.userName,
+      userDetails.phone,
+      userDetails.branch,
+      userDetails.episode
+    ]);
+    
+    console.log("רישום להגרלה הושלם בהצלחה");
+    return {
+      success: true,
+      message: 'נרשמת להגרלה בהצלחה'
+    };
+  } catch (error) {
+    console.error('שגיאת רישום להגרלה:', error.toString());
+    return {
+      success: false,
+      error: 'שגיאה בשמירת פרטי ההגרלה: ' + error.toString()
+    };
+  }
+}
+
+// פונקציה לשמירת נתוני האזנה
+function savePodcastListen(listenData) {
+  console.log("שמירת נתוני האזנה:", JSON.stringify(listenData));
+  
+  if (!listenData || !listenData.episode) {
+    return {
+      success: false,
+      error: 'חסרים נתוני האזנה'
+    };
+  }
+
+  try {
+    let ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    let listensSheet = ss.getSheetByName(PODCAST_LISTENS_SHEET_NAME);
+    
+    if (!listensSheet) {
+      console.log("יוצר גיליון האזנות חדש");
+      listensSheet = ss.insertSheet(PODCAST_LISTENS_SHEET_NAME);
+      listensSheet.getRange('A1:D1').setValues([['תאריך', 'פרק', 'משך האזנה', 'האזנה מלאה']]);
+      listensSheet.setFrozenRows(1);
+    }
+    
+    const timestamp = new Date();
+    
+    // שמירת נתוני ההאזנה
+    listensSheet.appendRow([
+      timestamp,
+      listenData.episode,
+      listenData.duration,
+      listenData.completed ? 'כן' : 'לא'
+    ]);
+    
+    console.log("נתוני האזנה נשמרו בהצלחה");
+    return {
+      success: true,
+      message: 'נתוני האזנה נשמרו'
+    };
+  } catch (error) {
+    console.error('שגיאה בשמירת נתוני האזנה:', error.toString());
+    return {
+      success: false,
+      error: 'שגיאה בשמירת נתוני האזנה: ' + error.toString()
+    };
+  }
+}
+
 // נוסיף פונקציה שתיצור את המבנה הבסיסי של הגיליון אם הוא לא קיים
 function setupSpreadsheet() {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
@@ -277,6 +395,22 @@ function setupSpreadsheet() {
     registrationSheet = ss.insertSheet(REGISTRATION_SHEET_NAME);
     registrationSheet.getRange('A1:D1').setValues([['תאריך', 'שם', 'סניף', 'טלפון']]);
     registrationSheet.setFrozenRows(1);
+  }
+  
+  // הגדרת גיליון הגרלת פודקאסט
+  let podcastLotterySheet = ss.getSheetByName(PODCAST_LOTTERY_SHEET_NAME);
+  if (!podcastLotterySheet) {
+    podcastLotterySheet = ss.insertSheet(PODCAST_LOTTERY_SHEET_NAME);
+    podcastLotterySheet.getRange('A1:E1').setValues([['תאריך', 'שם', 'טלפון', 'סניף', 'פרק']]);
+    podcastLotterySheet.setFrozenRows(1);
+  }
+  
+  // הגדרת גיליון האזנות פודקאסט
+  let podcastListensSheet = ss.getSheetByName(PODCAST_LISTENS_SHEET_NAME);
+  if (!podcastListensSheet) {
+    podcastListensSheet = ss.insertSheet(PODCAST_LISTENS_SHEET_NAME);
+    podcastListensSheet.getRange('A1:D1').setValues([['תאריך', 'פרק', 'משך האזנה', 'האזנה מלאה']]);
+    podcastListensSheet.setFrozenRows(1);
   }
   
   return "Spreadsheet setup completed";

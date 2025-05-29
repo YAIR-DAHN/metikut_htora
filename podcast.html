@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="מאזינים למפקיד - פודקאסט לשינון וחזרה של פרק המפקיד במסגרת מיזם מתיקות התורה">
+    <meta property="og:title" content="מאזינים למפקיד - מתיקות התורה">
+    <meta property="og:description" content="פודקאסט לשינון וחזרה של פרק המפקיד">
+    <meta property="og:image" content="./assets/logos/metikut-hatorah-logo.png">
+    <meta name="theme-color" content="#1abc9c">
+
+    <link rel="icon" type="image/png" href="./assets/logos/or-israeli-logo.png">
+    <link rel="apple-touch-icon" href="./assets/logos/or-israeli-logo.png">
+
+    <title>מאזינים למפקיד - מתיקות התורה</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dark-mode.css">
+    <link rel="stylesheet" href="css/podcast.css">
+    <script src="js/config.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/podcast.js"></script>
+</head>
+
+<body>
+    <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+        <p>טוען...</p>
+    </div>
+
+    <header>
+        <div class="logo-container">
+            <div class="secondary-logo">
+                <img src="assets/logos/or-israeli-logo.png" alt="אור ישראלי">
+            </div>
+            <div class="main-logo">
+                <img src="assets/logos/metikut-hatorah-logo.png" alt="מתיקות התורה">
+            </div>
+        </div>
+    </header>
+
+    <main class="podcast-main">
+        <!-- כפתור חזרה לדף הבית -->
+        <div class="back-button-container">
+            <a href="index.html" class="back-button">
+                <span class="material-icons">home</span>
+                חזרה לדף הבית
+            </a>
+        </div>
+
+        <!-- כותרת הפודקאסט -->
+        <section class="podcast-header animate-on-scroll">
+            <div class="podcast-title-section">
+                <h1 class="podcast-title">
+                    <span class="material-icons">headphones</span>
+                    מאזינים למפקיד
+                </h1>
+                <p class="podcast-subtitle">פודקאסט לשינון וחזרה של פרק המפקיד במסגרת מיזם מתיקות התורה</p>
+                <div class="podcast-notice">
+                    <span class="material-icons">info</span>
+                    <p>הפודקאסט נוצר ומוקריין על ידי בינה מלאכותית, ולכן ייתכן חוסר דיוק בנאמר</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- נגן הפודקאסט -->
+        <section class="podcast-player-section animate-on-scroll">
+            <div class="player-container">
+                <div class="player-artwork">
+                    <img src="assets/podcast/Podcast Cover.png" alt="מאזינים למפקיד" class="artwork-image">
+                    <div class="playing-indicator hidden">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+
+                <div class="player-info">
+                    <h2 class="episode-title" id="episodeTitle">בחר פרק להאזנה</h2>
+                    <p class="episode-description" id="episodeDescription">לחץ על אחד הפרקים למטה כדי להתחיל להאזין</p>
+                </div>
+
+                <div class="player-controls">
+                    <audio id="podcastAudio" preload="metadata"></audio>
+
+                    <div class="time-display">
+                        <span id="currentTime">00:00</span>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                                <div class="progress-handle" id="progressHandle"></div>
+                            </div>
+                            <div class="buffered-bar" id="bufferedBar"></div>
+                        </div>
+                        <span id="totalTime">00:00</span>
+                    </div>
+                    
+                    <div class="control-buttons">
+                        <div class="speed-control">
+                        <button class="control-btn" id="speedBtn">
+                            <span>1x</span>
+                        </button>
+                        <div class="speed-menu hidden" id="speedMenu">
+                            <button data-speed="0.5">0.5x</button>
+                            <button data-speed="0.75">0.75x</button>
+                            <button data-speed="1" class="active">1x</button>
+                            <button data-speed="1.25">1.25x</button>
+                            <button data-speed="1.5">1.5x</button>
+                            <button data-speed="2">2x</button>
+                        </div>
+                    </div>
+                        <button class="control-btn" id="skipBackward" title="אחורה 15 שניות">
+                            <span class="material-icons">forward_10</span>
+
+                        </button>
+
+                        <button class="control-btn play-btn" id="playPauseBtn" disabled>
+                            <span class="material-icons play-icon">play_arrow</span>
+                            <span class="material-icons pause-icon hidden">pause</span>
+                        </button>
+
+                        <button class="control-btn" id="skipForward" title="קדימה 15 שניות">
+                            <span class="material-icons">replay_10</span>
+                        </button>
+
+
+
+                        <button class="control-btn" id="volumeBtn">
+                            <span class="material-icons">volume_up</span>
+                        </button>
+                        <div class="volume-slider hidden" id="volumeSlider">
+                            <input type="range" min="0" max="100" value="100" id="volumeRange" title="עוצמת קול">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- רשימת פרקים -->
+        <section class="episodes-section animate-on-scroll">
+            <h2 class="section-title">
+                <span class="material-icons">queue_music</span>
+                רשימת פרקים
+            </h2>
+            <div class="episodes-list" id="episodesList">
+                <!-- הפרקים יתווספו כאן דרך JavaScript -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p class="footer-credit" onclick="showContactInfo()">נבנה ע"י Y.D. Systems</p>
+    </footer>
+
+    <!-- מודל המשך האזנה -->
+    <div id="resumeModal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="material-icons modal-icon">play_circle_outline</span>
+                <h3 class="modal-title">המשך האזנה</h3>
+            </div>
+            <div class="modal-content">
+                <p>זיהינו שהפסקת להאזין בדקה <span id="resumeTime"></span></p>
+                <p>האם תרצה להמשיך מהמקום שהפסקת?</p>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-button secondary" onclick="startFromBeginning()">התחל מההתחלה</button>
+                <button class="modal-button primary" onclick="resumePlayback()">המשך מהמקום שהפסקתי</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- מודל סיום האזנה -->
+    <div id="completionModal" class="modal-overlay hidden">
+        <div class="modal completion-modal">
+            <button class="modal-close" onclick="closeCompletionModal()">
+                <span class="material-icons">close</span>
+            </button>
+            <div class="modal-header">
+                <span class="material-icons modal-icon success">celebration</span>
+                <h3 class="modal-title">כל הכבוד!</h3>
+            </div>
+            <div class="modal-content">
+                <p>סיימת להאזין לפרק במלואו!</p>
+                <p>אתה זכאי להשתתף בהגרלה על פרסים יקרי ערך</p>
+                <form id="lotteryForm" onsubmit="submitLotteryForm(event)">
+                    <div class="form-group">
+                        <label for="lotteryName">שם מלא</label>
+                        <input type="text" id="lotteryName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lotteryPhone">מספר טלפון</label>
+                        <input type="tel" id="lotteryPhone" pattern="[0-9]{10}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lotteryBranch">סניף</label>
+                        <div class="branch-search-container">
+                            <input type="text" id="lotteryBranch" required placeholder="הקלד לחיפוש סניף...">
+                            <div class="branch-results"></div>
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-button">שלח והשתתף בהגרלה</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

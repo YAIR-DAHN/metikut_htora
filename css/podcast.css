@@ -1,0 +1,789 @@
+/* עיצוב כללי לדף הפודקאסט - סגנון Spotify */
+body {
+    background: #121212 !important;
+    color: #fff !important;
+}
+
+main {
+    background: transparent !important;
+    box-shadow: none !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+}
+
+/* ביטול הגדרות dark mode */
+[data-theme="dark"] main {
+    background: transparent !important;
+}
+
+.podcast-main {
+    background: #121212;
+    min-height: calc(100vh - 200px);
+    padding-bottom: 3rem;
+    color: #fff;
+    display: block !important;
+    opacity: 1 !important;
+}
+
+/* ביטול אנימציות שמסתירות תוכן */
+.animate-on-scroll {
+    opacity: 1 !important;
+    transform: none !important;
+}
+
+/* הצגת כל הסקשנים */
+.podcast-header,
+.podcast-player-section,
+.episodes-section {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* כותרת הפודקאסט */
+.podcast-header {
+    text-align: center;
+    padding: 2rem 1rem;
+    margin-bottom: 2rem;
+}
+
+.podcast-title-section {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.podcast-title {
+    font-size: 3rem;
+    color: #fff;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    font-weight: 700;
+}
+
+.podcast-title .material-icons {
+    font-size: 3.5rem;
+    color: #1db954;
+}
+
+.podcast-subtitle {
+    font-size: 1.2rem;
+    color: #b3b3b3;
+    margin-bottom: 1.5rem;
+}
+
+.podcast-notice {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.podcast-notice .material-icons {
+    color: #ffa500;
+    font-size: 1.5rem;
+}
+
+.podcast-notice p {
+    margin: 0;
+    color: #fff;
+    font-size: 0.95rem;
+    opacity: 0.9;
+}
+
+/* נגן הפודקאסט */
+.podcast-player-section {
+    margin-bottom: 3rem;
+}
+
+.player-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #282828;
+    border-radius: 12px;
+    padding: 2rem;
+    position: relative;
+}
+
+.player-artwork {
+    width: 250px;
+    height: 250px;
+    margin: 0 auto 2rem;
+    position: relative;
+}
+
+.artwork-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* אינדיקטור השמעה */
+.playing-indicator {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 4px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 8px 12px;
+    border-radius: 20px;
+}
+
+.playing-indicator span {
+    width: 3px;
+    height: 20px;
+    background: #1db954;
+    border-radius: 3px;
+    animation: wave 1.2s ease-in-out infinite;
+}
+
+.playing-indicator span:nth-child(2) {
+    animation-delay: -1.1s;
+}
+
+.playing-indicator span:nth-child(3) {
+    animation-delay: -1s;
+}
+
+@keyframes wave {
+    0%, 40%, 100% {
+        transform: scaleY(0.4);
+    }
+    20% {
+        transform: scaleY(1);
+    }
+}
+
+.player-info {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.episode-title {
+    font-size: 1.8rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.episode-description {
+    color: #b3b3b3;
+    font-size: 1rem;
+}
+
+/* בקרות הנגן */
+.player-controls {
+    position: relative;
+}
+
+.time-display {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.time-display span {
+    font-size: 0.75rem;
+    color: #b3b3b3;
+    min-width: 40px;
+    font-family: monospace;
+}
+
+.progress-bar-container {
+    flex: 1;
+    height: 8px;
+    background: #232323;
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: 0 0 0 1.5px #1db95455;
+}
+
+.progress-bar-container:hover {
+    height: 12px;
+}
+
+.progress-bar {
+    height: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #1db954 0%, #1ed760 100%);
+    border-radius: 4px;
+    width: 0%;
+    transition: width 0.1s cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 0 6px #1db95499;
+}
+
+.buffered-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: rgba(255,255,255,0.18);
+    border-radius: 4px;
+    width: 0%;
+    z-index: 1;
+}
+
+.progress-handle {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    border: 2.5px solid #1db954;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    cursor: grab;
+    opacity: 0;
+    transition: opacity 0.2s, border 0.2s;
+    z-index: 3;
+}
+
+.progress-bar-container:hover .progress-handle {
+    opacity: 1;
+    border: 2.5px solid #1ed760;
+}
+
+/* כפתורי בקרה */
+.control-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.control-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    color: #b3b3b3;
+    position: relative;
+}
+
+.control-btn:hover {
+    color: #fff;
+    transform: scale(1.05);
+}
+
+.control-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.play-btn {
+    width: 56px;
+    height: 56px;
+    background: #1db954;
+    color: #000;
+    box-shadow: 0 0 0 0 rgba(29, 185, 84, 0.4);
+    transition: all 0.2s ease;
+}
+
+.play-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 8px rgba(29, 185, 84, 0.1);
+}
+
+.play-btn .material-icons {
+    font-size: 32px;
+}
+
+.control-btn .material-icons {
+    font-size: 20px;
+}
+
+/* בקרת מהירות */
+.speed-control {
+    position: relative;
+}
+
+.speed-control .control-btn span {
+    font-size: 12px;
+    font-weight: 600;
+    font-family: sans-serif;
+}
+
+.speed-menu {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #282828;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    padding: 0.5rem 0;
+    margin-bottom: 0.5rem;
+    z-index: 10;
+    border: 1px solid #3e3e3e;
+}
+
+.speed-menu button {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 1.5rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+    color: #b3b3b3;
+}
+
+.speed-menu button:hover {
+    background: #3e3e3e;
+    color: #fff;
+}
+
+.speed-menu button.active {
+    color: #1db954;
+    font-weight: 600;
+}
+
+/* בקרת עוצמת קול */
+.volume-slider {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #282828;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    z-index: 10;
+    border: 1px solid #3e3e3e;
+}
+
+.volume-slider input[type="range"] {
+    width: 100px;
+    height: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: #535353;
+    border-radius: 2px;
+    outline: none;
+}
+
+.volume-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.volume-slider input[type="range"]::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+/* רשימת פרקים */
+.episodes-section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.section-title {
+    color: #fff;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.section-title .material-icons {
+    color: #1db954;
+}
+
+.episodes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.episode-item {
+    background: transparent;
+    border-radius: 8px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.episode-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.episode-item.active {
+    background: rgba(29, 185, 84, 0.2);
+}
+
+.episode-number {
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: 2px solid #535353;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1rem;
+    flex-shrink: 0;
+    color: #b3b3b3;
+}
+
+.episode-item.active .episode-number {
+    background: #1db954;
+    border-color: #1db954;
+    color: #000;
+}
+
+.episode-details {
+    flex: 1;
+}
+
+.episode-name {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    color: #fff;
+}
+
+.episode-desc {
+    font-size: 0.85rem;
+    color: #b3b3b3;
+    margin-bottom: 0.25rem;
+}
+
+.episode-duration {
+    font-size: 0.75rem;
+    color: #b3b3b3;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.episode-duration .material-icons {
+    font-size: 14px;
+}
+
+/* מודלים */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+    display: flex !important;
+}
+
+.modal {
+    background: #282828;
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 90%;
+    width: 450px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+    color: #fff;
+    cursor: default;
+    position: relative;
+}
+
+.modal::before {
+    content: '✕';
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    color: #b3b3b3;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.modal::before:hover {
+    color: #fff;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.modal-content {
+    color: #b3b3b3;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+.modal-button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.modal-button.primary {
+    background: #1db954;
+    color: #000;
+}
+
+.modal-button.primary:hover {
+    background: #1ed760;
+    transform: scale(1.02);
+}
+
+.modal-button.secondary {
+    background: transparent;
+    color: #fff;
+    border: 1px solid #535353;
+}
+
+.modal-button.secondary:hover {
+    border-color: #fff;
+}
+
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: #b3b3b3;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: color 0.2s;
+}
+
+.modal-close:hover {
+    color: #fff;
+}
+
+.completion-modal {
+    max-width: 500px;
+}
+
+.modal-icon {
+    font-size: 2.5rem;
+}
+
+.modal-icon.success {
+    color: #1db954;
+}
+
+/* טופס הגרלה */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #b3b3b3;
+    font-size: 0.9rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    background: #121212;
+    border: 1px solid #535353;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #1db954;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 1rem;
+    background: #1db954;
+    border: none;
+    border-radius: 24px;
+    color: #000;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.submit-button:hover {
+    background: #1ed760;
+    transform: scale(1.02);
+}
+
+/* חיפוש סניפים */
+.branch-search-container {
+    position: relative;
+}
+
+.branch-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #282828;
+    border: 1px solid #535353;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
+}
+
+.branch-result-item {
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    color: #b3b3b3;
+}
+
+.branch-result-item:hover {
+    background: #3e3e3e;
+    color: #fff;
+}
+
+/* רספונסיביות */
+@media (max-width: 768px) {
+    .podcast-title {
+        font-size: 2rem;
+    }
+    
+    .player-container {
+        padding: 1.5rem;
+    }
+    
+    .player-artwork {
+        width: 180px;
+        height: 180px;
+    }
+    
+    .control-buttons {
+        gap: 1rem;
+    }
+    
+    .play-btn {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .play-btn .material-icons {
+        font-size: 28px;
+    }
+    
+    .episode-item {
+        padding: 0.75rem;
+    }
+}
+
+/* תיקון עיצוב כותרות לבנות */
+header {
+    background: #000;
+}
+
+/* ביטול הבורדר הלבן מה-header */
+.logo-container {
+    border-bottom: none !important;
+}
+
+.back-button {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.back-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+footer {
+    background: #000;
+    color: #b3b3b3;
+    border-top: 1px solid #282828;
+}
+
+footer .footer-credit {
+    color: #b3b3b3;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+footer .footer-credit:hover {
+    color: #1db954;
+}
+
+/* מצב בהיר - ביטול */
+[data-theme="dark"] .podcast-main {
+    /* השארת העיצוב הכהה גם במצב כהה */
+} 
