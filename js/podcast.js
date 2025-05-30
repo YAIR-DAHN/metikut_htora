@@ -1,6 +1,7 @@
 // הגדרות הפודקאסט
 const PODCAST_CONFIG = {
-    enableLotteryForm: true, // הפעלה/השבתה של טופס ההגרלה
+    enableLotteryForm: false, // הפעלה/השבתה של טופס ההגרלה
+    // enableLotteryForm: true, // הפעלה/השבתה של טופס ההגרלה
     minListenPercentage: 90, // אחוז מינימלי להאזנה מלאה
     skipInterval: 10, // שניות לדילוג קדימה/אחורה
     resumeBuffer: 5, // שניות לחזור אחורה בהמשך האזנה
@@ -11,16 +12,16 @@ const EPISODES = [
     {
         id: 'episode1',
         number: 1,
-        title: 'פרק א - מבוא לפרק המפקיד',
-        description: 'לימוד יסודות פרק המפקיד, הגדרות בסיסיות ומושגי יסוד',
+        title: 'פרק א - דף לג: עד לד.',
+        description: 'הפרק עוסק מתחילת הפרק עד שני הלישנות ברבא',
         audioFile: 'assets/podcast/מאזינים למפקיד פרק א.mp3',
         duration: "07:18" // אורך הפרק
     },
     {
         id: 'episode2',
         number: 2,
-        title: 'פרק ב - דיני שומרים',
-        description: 'העמקה בדיני שומרים וחלוקת האחריות בין סוגי השומרים',
+        title: 'פרק ב - המשך דף לד.',
+        description: 'הפרק עוסק בסוגיה של "לא שילם שילם ממש" עד סוף העמוד',
         audioFile: 'assets/podcast/מאזינים למפקיד פרק ב.mp3',
         duration: "06:44"
     }
@@ -41,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadEpisodes();
     loadPlaybackData();
     setupEventListeners();
-    setupBranchAutocomplete();
+    // setupBranchAutocomplete(); // הוסר! נקרא רק במודל דינמי
     // initDarkMode מוגדרת כבר ב-common.js ונטענת אוטומטית
 });
 
@@ -107,8 +108,7 @@ function selectEpisode(episode) {
     hasCompletedEpisode = false;
     isPlaying = false;
     // הסתרת מודלים
-    document.getElementById('resumeModal').classList.add('hidden');
-    document.getElementById('completionModal').classList.add('hidden');
+    // הוסר: לא צריך להסתיר מודלים סטטיים
     currentEpisode = episode;
     
     // עדכון UI
@@ -151,29 +151,29 @@ function checkResumePlayback(episodeId) {
     if (savedTime && savedTime > 5) {
         const minutes = Math.floor(savedTime / 60);
         const seconds = Math.floor(savedTime % 60);
-        document.getElementById('resumeTime').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-        document.getElementById('resumeModal').classList.remove('hidden');
-    } else {
-        // במקום להפעיל אוטומטית, נאפשר למשתמש ללחוץ play
-        // playPause();
+        showModal({
+            title: 'המשך האזנה',
+            message: `זיהינו שהפסקת להאזין בדקה <b>${minutes}:${seconds.toString().padStart(2, '0')}</b><br>האם תרצה להמשיך מהמקום שהפסקת?`,
+            icon: 'play_circle_outline',
+            confirmText: 'המשך מהמקום שהפסקתי',
+            cancelText: 'התחל מההתחלה',
+            onConfirm: resumePlayback,
+            onCancel: startFromBeginning
+        });
     }
 }
 
 function resumePlayback() {
     if (!currentEpisode || !audioPlayer) return;
-    
     const savedTime = playbackData[currentEpisode.id];
     const resumeTime = Math.max(0, savedTime - PODCAST_CONFIG.resumeBuffer);
     audioPlayer.currentTime = resumeTime;
-    document.getElementById('resumeModal').classList.add('hidden');
     playPause();
 }
 
 function startFromBeginning() {
     if (!currentEpisode || !audioPlayer) return;
-    
     audioPlayer.currentTime = 0;
-    document.getElementById('resumeModal').classList.add('hidden');
     playPause();
 }
 
@@ -276,24 +276,20 @@ function updateBuffered() {
 
 function handleEpisodeEnd() {
     const listenData = listenHistory[currentEpisode.id];
-    const listenPercentage = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-    
+    // חישוב אחוז האזנה אמיתי
+    const totalListened = listenData ? listenData.totalListened : 0;
+    const duration = audioPlayer.duration;
+    const listenPercentage = (totalListened / duration) * 100;
     if (listenPercentage >= PODCAST_CONFIG.minListenPercentage && !hasCompletedEpisode) {
         hasCompletedEpisode = true;
         listenData.completed = true;
-        
-        // שמירת נתוני האזנה
         saveListenData();
-        
-        // הצגת טופס הגרלה אם מופעל
         if (PODCAST_CONFIG.enableLotteryForm) {
             setTimeout(() => {
-                document.getElementById('completionModal').classList.remove('hidden');
+                showLotteryModal();
             }, 500);
         }
     }
-    
-    // איפוס נתוני ההשמעה
     delete playbackData[currentEpisode.id];
     savePlaybackPosition();
 }
@@ -439,9 +435,7 @@ async function submitLotteryForm(event) {
     showLoading();
     
     try {
-        const result = await fetchFromAPI('submitPodcastLottery', 'POST', {
-            userDetails: userDetails
-        });
+        const result = await fetchFromAPI('submitPodcastLottery', 'POST', { userDetails: userDetails });
         
         if (result.success) {
             showModal({
@@ -466,14 +460,56 @@ async function submitLotteryForm(event) {
     }
 }
 
+function showLotteryModal() {
+    showModal({
+        title: 'כל הכבוד!',
+        message: `<p>סיימת להאזין לפרק במלואו!</p>
+                  <p>אתה זכאי להשתתף בהגרלה על פרסים יקרי ערך</p>
+                  <form id="lotteryForm" style="margin-top:1rem;">
+                    <div class="form-group">
+                        <label for="lotteryName">שם מלא</label>
+                        <input type="text" id="lotteryName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lotteryPhone">מספר טלפון</label>
+                        <input type="tel" id="lotteryPhone" pattern="[0-9]{10}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lotteryBranch">סניף</label>
+                        <div class="branch-search-container">
+                            <input type="text" id="lotteryBranch" required placeholder="הקלד לחיפוש סניף...">
+                            <div class="branch-results"></div>
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-button">שלח והשתתף בהגרלה</button>
+                  </form>` ,
+        icon: 'celebration',
+        confirmText: 'סגור',
+        onConfirm: () => {},
+        onCancel: null
+    });
+    // הפעלת אוטוקומפליט לסניפים
+    setTimeout(setupBranchAutocomplete, 100);
+    // טיפול בשליחת הטופס
+    setTimeout(() => {
+        const form = document.getElementById('lotteryForm');
+        if (form) {
+            form.addEventListener('submit', submitLotteryForm);
+        }
+    }, 100);
+}
+
 function closeCompletionModal() {
-    document.getElementById('completionModal').classList.add('hidden');
+    // לא רלוונטי יותר, כי המודל דינמי
 }
 
 // שמירת נתוני האזנה
 async function saveListenData() {
     if (!currentEpisode) return;
+    const deviceId = getOrCreateDeviceId();
     const listenData = {
+        deviceId,
+        episodeId: currentEpisode.id,
         episode: currentEpisode.title,
         date: new Date().toISOString(),
         duration: formatTime(listenHistory[currentEpisode.id].totalListened),
@@ -481,11 +517,20 @@ async function saveListenData() {
     };
     try {
         console.log('שולח נתוני האזנה ל-API:', listenData);
-        const result = await fetchFromAPI('savePodcastListen', 'POST', { listenData });
+        const result = await fetchFromAPI('savePodcastListen', 'POST', { listenData: listenData });
         console.log('תשובת API:', result);
     } catch (error) {
         console.error('שגיאה בשמירת נתוני האזנה:', error);
     }
+}
+
+function getOrCreateDeviceId() {
+    let deviceId = localStorage.getItem('podcastDeviceId');
+    if (!deviceId) {
+        deviceId = 'dev-' + Math.random().toString(36).substr(2, 12) + '-' + Date.now();
+        localStorage.setItem('podcastDeviceId', deviceId);
+    }
+    return deviceId;
 }
 
 // הגדרת השלמה אוטומטית לסניפים

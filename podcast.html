@@ -57,10 +57,7 @@
                     מאזינים למפקיד
                 </h1>
                 <p class="podcast-subtitle">פודקאסט לשינון וחזרה של פרק המפקיד במסגרת מיזם מתיקות התורה</p>
-                <div class="podcast-notice">
-                    <span class="material-icons">info</span>
-                    <p>הפודקאסט נוצר ומוקריין על ידי בינה מלאכותית, ולכן ייתכן חוסר דיוק בנאמר</p>
-                </div>
+                
             </div>
         </section>
 
@@ -146,65 +143,16 @@
             <div class="episodes-list" id="episodesList">
                 <!-- הפרקים יתווספו כאן דרך JavaScript -->
             </div>
+            <div class="podcast-notice">
+                    <span class="material-icons">info</span>
+                    <p>הפודקאסט נוצר ומוקריין על ידי בינה מלאכותית, ולכן ייתכן חוסר דיוק בנאמר</p>
+                </div>
         </section>
     </main>
 
     <footer>
         <p class="footer-credit" onclick="showContactInfo()">נבנה ע"י Y.D. Systems</p>
     </footer>
-
-    <!-- מודל המשך האזנה -->
-    <div id="resumeModal" class="modal-overlay hidden">
-        <div class="modal">
-            <div class="modal-header">
-                <span class="material-icons modal-icon">play_circle_outline</span>
-                <h3 class="modal-title">המשך האזנה</h3>
-            </div>
-            <div class="modal-content">
-                <p>זיהינו שהפסקת להאזין בדקה <span id="resumeTime"></span></p>
-                <p>האם תרצה להמשיך מהמקום שהפסקת?</p>
-            </div>
-            <div class="modal-actions">
-                <button class="modal-button secondary" onclick="startFromBeginning()">התחל מההתחלה</button>
-                <button class="modal-button primary" onclick="resumePlayback()">המשך מהמקום שהפסקתי</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- מודל סיום האזנה -->
-    <div id="completionModal" class="modal-overlay hidden">
-        <div class="modal completion-modal">
-            <button class="modal-close" onclick="closeCompletionModal()">
-                <span class="material-icons">close</span>
-            </button>
-            <div class="modal-header">
-                <span class="material-icons modal-icon success">celebration</span>
-                <h3 class="modal-title">כל הכבוד!</h3>
-            </div>
-            <div class="modal-content">
-                <p>סיימת להאזין לפרק במלואו!</p>
-                <p>אתה זכאי להשתתף בהגרלה על פרסים יקרי ערך</p>
-                <form id="lotteryForm" onsubmit="submitLotteryForm(event)">
-                    <div class="form-group">
-                        <label for="lotteryName">שם מלא</label>
-                        <input type="text" id="lotteryName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="lotteryPhone">מספר טלפון</label>
-                        <input type="tel" id="lotteryPhone" pattern="[0-9]{10}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="lotteryBranch">סניף</label>
-                        <div class="branch-search-container">
-                            <input type="text" id="lotteryBranch" required placeholder="הקלד לחיפוש סניף...">
-                            <div class="branch-results"></div>
-                        </div>
-                    </div>
-                    <button type="submit" class="submit-button">שלח והשתתף בהגרלה</button>
-                </form>
-            </div>
-        </div>
-    </div>
 </body>
 
 </html>

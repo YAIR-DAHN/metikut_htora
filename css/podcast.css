@@ -43,8 +43,8 @@ main {
 /* כותרת הפודקאסט */
 .podcast-header {
     text-align: center;
-    padding: 2rem 1rem;
-    margin-bottom: 2rem;
+    /* padding: 2rem 1rem; */
+    /* margin-bottom: 2rem; */
 }
 
 .podcast-title-section {
@@ -502,139 +502,132 @@ main {
 }
 
 /* מודלים */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
+.modal-overlay, .modal-overlay.active, .modal-overlay:not(.hidden) {
+    display: flex !important;
     align-items: center;
     justify-content: center;
-    z-index: 9999;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-    cursor: pointer;
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 9999 !important;
+    background: rgba(18, 18, 18, 0.92) !important;
+    transition: background 0.3s;
 }
-
-.modal-overlay.active {
-    opacity: 1;
-    visibility: visible;
-    display: flex !important;
-}
-
 .modal {
-    background: #282828;
-    border-radius: 12px;
-    padding: 2rem;
-    max-width: 90%;
-    width: 450px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    transform: scale(0.9);
-    transition: transform 0.3s ease;
-    color: #fff;
-    cursor: default;
+    background: linear-gradient(135deg, #232323 60%, #181818 100%) !important;
+    color: #fff !important;
+    border-radius: 18px;
+    padding: 2.5rem 2rem 2rem 2rem;
+    max-width: 95vw;
+    width: 420px;
+    min-height: unset;
+    max-height: 90vh;
+    height: auto;
+    box-shadow: 0 12px 48px 0 rgba(0,0,0,0.55);
     position: relative;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    animation: modalPopIn 0.25s cubic-bezier(.4,0,.2,1);
+    justify-content: flex-start;
+    overflow: visible;
 }
-
-.modal::before {
-    content: '✕';
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    font-size: 1.5rem;
-    color: #b3b3b3;
-    cursor: pointer;
-    line-height: 1;
+@keyframes modalPopIn {
+    0% { transform: scale(0.95) translateY(30px); opacity: 0; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
 }
-
-.modal::before:hover {
-    color: #fff;
-}
-
 .modal-header {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    gap: 0.7rem;
+    margin-bottom: 1.2rem;
+    width: 100%;
+    justify-content: center;
+    position: relative;
 }
-
 .modal-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin: 0;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 0 auto;
+    letter-spacing: 0.5px;
+    text-align: center;
+    flex: 1;
 }
-
+.modal-icon {
+    font-size: 2.2rem;
+    color: #1db954;
+    margin-right: 0.5rem;
+}
 .modal-content {
-    color: #b3b3b3;
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
+    color: #fff;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    text-align: center;
+    width: 100%;
 }
-
 .modal-actions {
     display: flex;
     gap: 1rem;
-    justify-content: flex-end;
+    justify-content: center;
+    width: 100%;
 }
-
 .modal-button {
-    padding: 0.75rem 1.5rem;
+    padding: 0.9rem 1.7rem;
     border: none;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: 600;
+    border-radius: 24px;
+    font-size: 1.05rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.18s cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 2px 8px 0 rgba(29,185,84,0.08);
+    outline: none;
 }
-
 .modal-button.primary {
-    background: #1db954;
-    color: #000;
+    background: linear-gradient(90deg, #1db954 60%, #1ed760 100%);
+    color: #181818;
+    box-shadow: 0 2px 12px 0 rgba(29,185,84,0.13);
 }
-
 .modal-button.primary:hover {
-    background: #1ed760;
-    transform: scale(1.02);
+    background: linear-gradient(90deg, #1ed760 0%, #1db954 100%);
+    color: #000;
+    transform: translateY(-2px) scale(1.04);
 }
-
 .modal-button.secondary {
     background: transparent;
     color: #fff;
-    border: 1px solid #535353;
+    border: 2px solid #1db954;
 }
-
 .modal-button.secondary:hover {
-    border-color: #fff;
+    background: #232323;
+    color: #1db954;
+    border-color: #1ed760;
 }
-
 .modal-close {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
+    top: 14px;
+    left: 14px;
+    right: unset;
     background: none;
     border: none;
-    color: #b3b3b3;
     cursor: pointer;
-    padding: 0.5rem;
-    transition: color 0.2s;
+    font-size: 24px;
+    color: #999;
+    z-index: 2;
 }
 
-.modal-close:hover {
-    color: #fff;
+body[dir="rtl"] .modal-close, html[dir="rtl"] .modal-close {
+    left: 14px;
+    right: unset;
+}
+
+body[dir="ltr"] .modal-close, html[dir="ltr"] .modal-close {
+    right: 14px;
+    left: unset;
 }
 
 .completion-modal {
     max-width: 500px;
-}
-
-.modal-icon {
-    font-size: 2.5rem;
-}
-
-.modal-icon.success {
-    color: #1db954;
 }
 
 /* טופס הגרלה */
@@ -787,3 +780,22 @@ footer .footer-credit:hover {
 [data-theme="dark"] .podcast-main {
     /* השארת העיצוב הכהה גם במצב כהה */
 } 
+
+@media (max-width: 600px) {
+    .modal {
+        width: 98vw;
+        min-width: unset;
+        padding: 1.2rem 0.5rem 1.5rem 0.5rem;
+        max-height: 98vh;
+    }
+    .modal-title {
+        font-size: 1.3rem;
+    }
+    .modal-content {
+        font-size: 1rem;
+    }
+    .modal-actions {
+        flex-direction: column;
+        gap: 0.7rem;
+    }
+}

@@ -14,15 +14,6 @@ function doGet(e) {
     .setMimeType(ContentService.MimeType.JSON)
     .setContent(JSON.stringify(handleRequest(e)));
   
-  // הוספת כותרות CORS כדי לאפשר גישה מכל דומיין
-  return addCorsHeaders(response);
-}
-
-// פונקציה להוספת כותרות CORS
-function addCorsHeaders(response) {
-  response.setHeader('Access-Control-Allow-Origin', '*');
-  response.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-  response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   return response;
 }
 
