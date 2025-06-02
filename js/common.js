@@ -1,6 +1,6 @@
 // פונקציות משותפות כמו showModal, initDarkMode וכו' 
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbxGMDiFP57XkA5cQZClFJPkd3wmcPXPPCUL918rzWL-TdXdqBpu_iOVzUJhZZ_7kfsN_A/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwpOz3V8V7k14t-VxjnDtKIrQpz2uZVCCZz727KP1RjK7Zh9h9XgfJa2xkpe8P4Zt9J4g/exec';
 
 // קאש לנתונים
 const cache = {
@@ -40,14 +40,16 @@ async function fetchFromAPI(action, method = 'GET', data = null) {
     const url = new URL(API_URL);
     url.searchParams.append('action', action);
     
-    if (method === 'POST' && data) {
-        url.searchParams.append('data', JSON.stringify(data));
+    // תמיד נשתמש ב-GET ונעביר נתונים כפרמטרים בURL
+    if (data) {
+        url.searchParams.append('data', encodeURIComponent(JSON.stringify(data)));
     }
     
     try {
-        const response = await fetch(url.toString());
+        const response = await fetch(url.toString(), {
+            method: 'GET'
+        });
         const text = await response.text();
-        
         try {
             const jsonResponse = JSON.parse(text);
             if (jsonResponse.error) {

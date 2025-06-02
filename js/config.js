@@ -1,7 +1,7 @@
 const CONFIG = {
     // הגדרות API
     api: {
-        url: 'https://script.google.com/macros/s/AKfycbxMTBghOkhhxWPNFNoQ6bLqwTyObdw46uqd7ReJDzpnBowcXfBW-VyF6ZzKbtKOIr451A/exec'
+        url: 'https://script.google.com/macros/s/AKfycbwpOz3V8V7k14t-VxjnDtKIrQpz2uZVCCZz727KP1RjK7Zh9h9XgfJa2xkpe8P4Zt9J4g/exec'
     },
 
     // הגדרות מבחן לא עובד מכאן

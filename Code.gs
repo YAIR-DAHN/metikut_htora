@@ -82,7 +82,7 @@ function handleRequest(e) {
       if (!data) {
         return { error: 'No data provided' };
       }
-      const listenResult = savePodcastListen(data.listenData);
+      const listenResult = savePodcastListen(data);
       if (!listenResult.success) {
         return { error: listenResult.error || 'Failed to save listen data' };
       }
@@ -310,48 +310,67 @@ function submitPodcastLottery(userDetails) {
 }
 
 // פונקציה לשמירת נתוני האזנה
-function savePodcastListen(listenData) {
-  console.log("שמירת נתוני האזנה:", JSON.stringify(listenData));
+function savePodcastListen(data) {
+  console.log("קבלת בקשת שמירת האזנה:", JSON.stringify(data));
   
-  if (!listenData || !listenData.episode) {
-    return {
-      success: false,
-      error: 'חסרים נתוני האזנה'
-    };
-  }
-
   try {
     let ss = SpreadsheetApp.openById(SPREADSHEET_ID);
     let listensSheet = ss.getSheetByName(PODCAST_LISTENS_SHEET_NAME);
     
     if (!listensSheet) {
-      console.log("יוצר גיליון האזנות חדש");
+      console.log("יוצר גיליון האזנות פודקאסט חדש");
       listensSheet = ss.insertSheet(PODCAST_LISTENS_SHEET_NAME);
-      listensSheet.getRange('A1:D1').setValues([['תאריך', 'פרק', 'משך האזנה', 'האזנה מלאה']]);
+      listensSheet.getRange('A1:H1').setValues([['מזהה', 'מכשיר', 'פרק', 'שם פרק', 'תאריך', 'משך האזנה (שניות)', 'הושלם', 'עדכון אחרון']]);
       listensSheet.setFrozenRows(1);
     }
+
+    const sessionId = data.sessionId;
+    const deviceId = data.deviceId;
+    const episodeId = data.episodeId;
+    const episodeTitle = data.episodeTitle;
+    const updateType = data.updateType;
+    const totalListened = data.totalListened;
+    const completed = data.completed;
+    const timestamp = new Date(data.timestamp);
     
-    const timestamp = new Date();
+    // חיפוש שורה קיימת לפי sessionId
+    const dataRange = listensSheet.getDataRange();
+    const values = dataRange.getValues();
+    let existingRow = -1;
     
-    // שמירת נתוני ההאזנה
-    listensSheet.appendRow([
+    // חיפוש השורה הקיימת (החל מהשורה השנייה כי הראשונה היא כותרות)
+    for (let i = 1; i < values.length; i++) {
+      if (values[i][0] === sessionId) { // sessionId נמצא בעמודה הראשונה
+        existingRow = i + 1; // +1 כי getValues() מתחיל מ-0
+        break;
+      }
+    }
+
+    const rowData = [
+      sessionId,
+      deviceId,
+      episodeId,
+      episodeTitle,
       timestamp,
-      listenData.episode,
-      listenData.duration,
-      listenData.completed ? 'כן' : 'לא'
-    ]);
-    
-    console.log("נתוני האזנה נשמרו בהצלחה");
-    return {
-      success: true,
-      message: 'נתוני האזנה נשמרו'
-    };
+      totalListened,
+      completed ? 'כן' : 'לא',
+      timestamp // עדכון אחרון
+    ];
+
+    if (existingRow > 0 && updateType !== 'start') {
+      // עדכון שורה קיימת (רק אם זה לא התחלת האזנה)
+      listensSheet.getRange(existingRow, 1, 1, rowData.length).setValues([rowData]);
+      console.log(`עודכן שורה ${existingRow} עבור האזנה ${sessionId}`);
+    } else if (updateType === 'start') {
+      // הוספת שורה חדשה רק עבור התחלת האזנה
+      listensSheet.appendRow(rowData);
+      console.log(`נוספה שורה חדשה עבור האזנה ${sessionId}`);
+    }
+
+    return { success: true };
   } catch (error) {
-    console.error('שגיאה בשמירת נתוני האזנה:', error.toString());
-    return {
-      success: false,
-      error: 'שגיאה בשמירת נתוני האזנה: ' + error.toString()
-    };
+    console.error('שגיאה בשמירת נתוני האזנה:', error);
+    return { success: false, error: error.toString() };
   }
 }
 
@@ -400,7 +419,7 @@ function setupSpreadsheet() {
   let podcastListensSheet = ss.getSheetByName(PODCAST_LISTENS_SHEET_NAME);
   if (!podcastListensSheet) {
     podcastListensSheet = ss.insertSheet(PODCAST_LISTENS_SHEET_NAME);
-    podcastListensSheet.getRange('A1:D1').setValues([['תאריך', 'פרק', 'משך האזנה', 'האזנה מלאה']]);
+    podcastListensSheet.getRange('A1:H1').setValues([['מזהה', 'מכשיר', 'פרק', 'שם פרק', 'תאריך', 'משך האזנה (שניות)', 'הושלם', 'עדכון אחרון']]);
     podcastListensSheet.setFrozenRows(1);
   }
   

@@ -270,7 +270,7 @@ async function sendRegistrationToServer(userDetails) {
     console.log("מנסה לשלוח פרטי רישום לשרת:", userDetails);
     
     try {
-        const result = await fetchFromAPI('submitRegistration', 'POST', {
+        const result = await fetchFromAPI('submitRegistration', 'GET', {
             userDetails: userDetails
         });
         console.log("תוצאת שליחה מהשרת:", result);

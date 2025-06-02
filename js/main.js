@@ -1,4 +1,4 @@
-const API_URL = 'https://script.google.com/macros/s/AKfycbxMTBghOkhhxWPNFNoQ6bLqwTyObdw46uqd7ReJDzpnBowcXfBW-VyF6ZzKbtKOIr451A/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwpOz3V8V7k14t-VxjnDtKIrQpz2uZVCCZz727KP1RjK7Zh9h9XgfJa2xkpe8P4Zt9J4g/exec';
 
 // קאש לנתונים
 const cache = {
@@ -32,12 +32,15 @@ async function fetchFromAPI(action, method = 'GET', data = null) {
     const url = new URL(API_URL);
     url.searchParams.append('action', action);
     
-    if (method === 'POST' && data) {
-        url.searchParams.append('data', JSON.stringify(data));
+    // עבור GET עם data, נוסיף את הנתונים כפרמטרים בURL
+    if (data) {
+        url.searchParams.append('data', encodeURIComponent(JSON.stringify(data)));
     }
     
     try {
-        const response = await fetch(url.toString());
+        const response = await fetch(url.toString(), {
+            method: 'GET'  // תמיד נשתמש ב-GET
+        });
         console.log('Response status:', response.status);
         console.log('Response headers:', [...response.headers.entries()]);
         
@@ -337,14 +340,14 @@ async function submitQuizToServer() {
             return;
         }
 
-        const result = await fetchFromAPI('submitQuiz', 'POST', {
+        const result = await fetchFromAPI('submitQuiz', 'GET', {
             userDetails: currentUserDetails,
             answers: userAnswers
         });
         
         if (result.success) {
             showModal({
-                title: 'b dcvasxcddcdffvvbbbbn  c!',
+                title: 'המבחן הוגש בהצלחה!',
                 message: 'התשובות נקלטו בהצלחה! הודעות ישלחו לזוכים',
                 icon: 'check_circle',
                 onConfirm: () => {

@@ -362,47 +362,131 @@ main {
     font-weight: 600;
 }
 
-/* בקרת עוצמת קול */
+/* בורר עוצמת השמע - עיצוב מודרני */
 .volume-slider {
     position: absolute;
-    bottom: 100%;
+    bottom: 110%;
     left: 50%;
     transform: translateX(-50%);
-    background: #282828;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    padding: 1rem;
-    margin-bottom: 0.5rem;
-    z-index: 10;
-    border: 1px solid #3e3e3e;
+    background: linear-gradient(135deg, #333 0%, #2a2a2a 100%);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 
+                0 2px 8px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    padding: 20px 16px;
+    margin-bottom: 8px;
+    z-index: 100;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    min-width: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-50%) translateY(10px) scale(0.95);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.volume-slider:not(.hidden) {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0) scale(1);
+}
+
+/* אייקון עוצמת קול בתוך הסליידר */
+.volume-slider::before {
+    content: '';
+    width: 24px;
+    height: 24px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 24 24'%3E%3Cpath d='M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z'/%3E%3C/svg%3E") no-repeat center;
+    background-size: contain;
+    opacity: 0.7;
+    margin-bottom: 4px;
 }
 
 .volume-slider input[type="range"] {
     width: 100px;
-    height: 4px;
+    height: 6px;
     -webkit-appearance: none;
     appearance: none;
-    background: #535353;
-    border-radius: 2px;
+    background: linear-gradient(to right, #1db954 0%, #1db954 var(--volume-percent, 100%), #444 var(--volume-percent, 100%), #444 100%);
+    border-radius: 10px;
     outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.volume-slider input[type="range"]:hover {
+    height: 8px;
+    transform: translateY(-1px);
 }
 
 .volume-slider input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 12px;
-    height: 12px;
-    background: #fff;
+    width: 18px;
+    height: 18px;
+    background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
     border-radius: 50%;
     cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 
+                0 0 0 2px rgba(29, 185, 84, 0.5);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid #1db954;
+}
+
+.volume-slider input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 
+                0 0 0 3px rgba(29, 185, 84, 0.7);
+}
+
+.volume-slider input[type="range"]::-webkit-slider-thumb:active {
+    transform: scale(1.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), 
+                0 0 0 4px rgba(29, 185, 84, 0.8);
 }
 
 .volume-slider input[type="range"]::-moz-range-thumb {
-    width: 12px;
-    height: 12px;
-    background: #fff;
+    width: 18px;
+    height: 18px;
+    background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
     border-radius: 50%;
     cursor: pointer;
-    border: none;
+    border: 2px solid #1db954;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 
+                0 0 0 2px rgba(29, 185, 84, 0.5);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.volume-slider input[type="range"]::-moz-range-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 
+                0 0 0 3px rgba(29, 185, 84, 0.7);
+}
+
+.volume-slider input[type="range"]::-moz-range-thumb:active {
+    transform: scale(1.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), 
+                0 0 0 4px rgba(29, 185, 84, 0.8);
+}
+
+/* אפקט זוהר עדין */
+.volume-slider input[type="range"]:focus {
+    box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.3);
+}
+
+/* אינדיקטור אחוזים */
+.volume-slider::after {
+    content: attr(data-volume) '%';
+    color: #b3b3b3;
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: 4px;
+    opacity: 0.8;
 }
 
 /* רשימת פרקים */
@@ -737,6 +821,26 @@ body[dir="ltr"] .modal-close, html[dir="ltr"] .modal-close {
     
     .episode-item {
         padding: 0.75rem;
+    }
+    
+    .volume-slider {
+        min-width: 120px;
+        padding: 16px 12px;
+    }
+    
+    .volume-slider input[type="range"] {
+        width: 80px;
+        height: 8px;
+    }
+    
+    .volume-slider input[type="range"]::-webkit-slider-thumb {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .volume-slider input[type="range"]::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
     }
 }
 

@@ -34,6 +34,10 @@ let isPlaying = false;
 let playbackData = {};
 let listenHistory = {};
 let hasCompletedEpisode = false;
+let listenStartTimeout = null;
+let listenUpdateInterval = null;
+let hasSentInitialListen = false;
+let currentListenSession = null; // מזהה ההאזנה הנוכחית
 
 // אתחול הדף
 document.addEventListener('DOMContentLoaded', function() {
@@ -61,6 +65,17 @@ function initPodcastPlayer() {
     audioPlayer.addEventListener('play', handlePlay);
     audioPlayer.addEventListener('pause', handlePause);
     audioPlayer.addEventListener('progress', updateBuffered);
+    
+    // אתחול בורר עוצמת השמע
+    const volumeRange = document.getElementById('volumeRange');
+    if (volumeRange) {
+        // טעינת עוצמת השמע השמורה או ברירת מחדל
+        const savedVolume = localStorage.getItem('podcastVolume') || volumeRange.value || 100;
+        volumeRange.value = savedVolume;
+        audioPlayer.volume = savedVolume / 100;
+        updateVolumeIcon(audioPlayer.volume);
+        updateVolumeSlider(savedVolume);
+    }
 }
 
 function loadEpisodes() {
@@ -125,10 +140,29 @@ function selectEpisode(episode) {
     console.log('Loading audio:', episode.audioFile);
     audioPlayer.src = episode.audioFile;
     
-    // מחכים שהאודיו יטען לפני הפעלת הכפתור
+    // מחכים שהאודיו יטען ואז מתחילים לנגן אוטומטית
     audioPlayer.addEventListener('loadeddata', () => {
-        console.log('Audio loaded successfully');
+        console.log('Audio loaded successfully - starting playback automatically');
         document.getElementById('playPauseBtn').disabled = false;
+        
+        // בדיקה אם יש נתוני המשך האזנה
+        const savedTime = playbackData[episode.id];
+        if (savedTime && savedTime > 5) {
+            const minutes = Math.floor(savedTime / 60);
+            const seconds = Math.floor(savedTime % 60);
+            showModal({
+                title: 'המשך האזנה',
+                message: `זיהינו שהפסקת להאזין בדקה <b>${minutes}:${seconds.toString().padStart(2, '0')}</b><br>האם תרצה להמשיך מהמקום שהפסקת?`,
+                icon: 'play_circle_outline',
+                confirmText: 'המשך מהמקום שהפסקתי',
+                cancelText: 'התחל מההתחלה',
+                onConfirm: resumePlayback,
+                onCancel: startFromBeginning
+            });
+        } else {
+            // אם אין נתוני המשך האזנה, מתחילים לנגן מההתחלה
+            playPause();
+        }
     }, { once: true });
     
     // טיפול בשגיאות טעינה
@@ -141,26 +175,6 @@ function selectEpisode(episode) {
         });
         document.getElementById('playPauseBtn').disabled = true;
     }, { once: true });
-    
-    // בדיקה אם יש נתוני המשך האזנה
-    checkResumePlayback(episode.id);
-}
-
-function checkResumePlayback(episodeId) {
-    const savedTime = playbackData[episodeId];
-    if (savedTime && savedTime > 5) {
-        const minutes = Math.floor(savedTime / 60);
-        const seconds = Math.floor(savedTime % 60);
-        showModal({
-            title: 'המשך האזנה',
-            message: `זיהינו שהפסקת להאזין בדקה <b>${minutes}:${seconds.toString().padStart(2, '0')}</b><br>האם תרצה להמשיך מהמקום שהפסקת?`,
-            icon: 'play_circle_outline',
-            confirmText: 'המשך מהמקום שהפסקתי',
-            cancelText: 'התחל מההתחלה',
-            onConfirm: resumePlayback,
-            onCancel: startFromBeginning
-        });
-    }
 }
 
 function resumePlayback() {
@@ -168,13 +182,15 @@ function resumePlayback() {
     const savedTime = playbackData[currentEpisode.id];
     const resumeTime = Math.max(0, savedTime - PODCAST_CONFIG.resumeBuffer);
     audioPlayer.currentTime = resumeTime;
-    playPause();
+    // התחלת ניגון אוטומטית
+    audioPlayer.play();
 }
 
 function startFromBeginning() {
     if (!currentEpisode || !audioPlayer) return;
     audioPlayer.currentTime = 0;
-    playPause();
+    // התחלת ניגון אוטומטית
+    audioPlayer.play();
 }
 
 function playPause() {
@@ -190,13 +206,54 @@ function handlePlay() {
     updatePlayButton();
     showPlayingIndicator(true);
     
-    // רישום תחילת האזנה
     if (!listenHistory[currentEpisode.id]) {
         listenHistory[currentEpisode.id] = {
             startTime: Date.now(),
             totalListened: 0,
             completed: false
         };
+    } else {
+        // עדכון זמן התחלה חדש
+        listenHistory[currentEpisode.id].startTime = Date.now();
+    }
+
+    // איפוס טיימרים
+    clearTimeout(listenStartTimeout);
+    clearInterval(listenUpdateInterval);
+
+    // בדיקה אם כבר נשמרה האזנה למכשיר זה לפרק זה
+    const deviceId = getOrCreateDeviceId();
+    const savedListenKey = `podcast_listen_${deviceId}_${currentEpisode.id}`;
+    const existingSession = localStorage.getItem(savedListenKey);
+
+    console.log('מצב האזנה:', {
+        deviceId,
+        episodeId: currentEpisode.id,
+        hasExistingSession: Boolean(existingSession),
+        currentTime: audioPlayer.currentTime
+    });
+
+    if (!existingSession) {
+        console.log('מתחיל מעקב האזנה חדש');
+        // יצירת מזהה ייחודי להאזנה
+        currentListenSession = generateListenSessionId();
+        
+        // שליחה ראשונית אחרי 10 שניות
+        listenStartTimeout = setTimeout(() => {
+            console.log('שולח נתוני התחלת האזנה (10 שניות)');
+            sendListenUpdate('start');
+            localStorage.setItem(savedListenKey, currentListenSession);
+            
+            // התחלת מעקב עדכונים כל 20 שניות
+            listenUpdateInterval = setInterval(() => {
+                console.log('שולח עדכון התקדמות האזנה (20 שניות נוספות)');
+                sendListenUpdate('progress');
+            }, 20000);
+        }, 10000);
+
+    } else {
+        console.log('האזנה כבר נשמרה בעבר עבור מכשיר זה - לא נוצר עדכון חדש');
+        currentListenSession = existingSession;
     }
 }
 
@@ -206,12 +263,14 @@ function handlePause() {
     showPlayingIndicator(false);
     savePlaybackPosition();
     
-    // עדכון זמן האזנה
     if (listenHistory[currentEpisode.id]) {
         const sessionTime = (Date.now() - listenHistory[currentEpisode.id].startTime) / 1000;
         listenHistory[currentEpisode.id].totalListened += sessionTime;
         listenHistory[currentEpisode.id].startTime = Date.now();
     }
+
+    clearTimeout(listenStartTimeout);
+    clearInterval(listenUpdateInterval);
 }
 
 function updatePlayButton() {
@@ -280,10 +339,14 @@ function handleEpisodeEnd() {
     const totalListened = listenData ? listenData.totalListened : 0;
     const duration = audioPlayer.duration;
     const listenPercentage = (totalListened / duration) * 100;
+    
     if (listenPercentage >= PODCAST_CONFIG.minListenPercentage && !hasCompletedEpisode) {
         hasCompletedEpisode = true;
         listenData.completed = true;
-        saveListenData();
+        
+        // שליחת עדכון סיום האזנה
+        sendListenUpdate('complete');
+        
         if (PODCAST_CONFIG.enableLotteryForm) {
             setTimeout(() => {
                 showLotteryModal();
@@ -373,7 +436,11 @@ function setupEventListeners() {
         const volume = e.target.value / 100;
         audioPlayer.volume = volume;
         updateVolumeIcon(volume);
+        updateVolumeSlider(e.target.value);
     });
+    
+    // עדכון ראשוני של הסליידר
+    updateVolumeSlider(volumeRange.value || 100);
     
     // סרגל התקדמות
     const progressBar = document.querySelector('.progress-bar-container');
@@ -384,7 +451,7 @@ function setupEventListeners() {
         if (!e.target.closest('.speed-control')) {
             speedMenu.classList.add('hidden');
         }
-        if (!e.target.closest('.control-btn') && !e.target.closest('.volume-slider')) {
+        if (!e.target.closest('#volumeBtn') && !e.target.closest('.volume-slider')) {
             volumeSlider.classList.add('hidden');
         }
     });
@@ -420,6 +487,22 @@ function updateVolumeIcon(volume) {
     }
 }
 
+function updateVolumeSlider(value) {
+    const volumeSlider = document.getElementById('volumeSlider');
+    const volumeRange = document.getElementById('volumeRange');
+    
+    if (!volumeSlider || !volumeRange) return;
+    
+    // עדכון המשתנה CSS לחלוקת הצבעים
+    volumeRange.style.setProperty('--volume-percent', `${value}%`);
+    
+    // עדכון האטריביוט לתצוגת האחוזים
+    volumeSlider.setAttribute('data-volume', Math.round(value));
+    
+    // שמירה מקומית של עוצמת השמע
+    localStorage.setItem('podcastVolume', value);
+}
+
 // טופס הגרלה
 async function submitLotteryForm(event) {
     event.preventDefault();
@@ -435,7 +518,7 @@ async function submitLotteryForm(event) {
     showLoading();
     
     try {
-        const result = await fetchFromAPI('submitPodcastLottery', 'POST', { userDetails: userDetails });
+        const result = await fetchFromAPI('submitPodcastLottery', 'GET', { userDetails: userDetails });
         
         if (result.success) {
             showModal({
@@ -503,27 +586,6 @@ function closeCompletionModal() {
     // לא רלוונטי יותר, כי המודל דינמי
 }
 
-// שמירת נתוני האזנה
-async function saveListenData() {
-    if (!currentEpisode) return;
-    const deviceId = getOrCreateDeviceId();
-    const listenData = {
-        deviceId,
-        episodeId: currentEpisode.id,
-        episode: currentEpisode.title,
-        date: new Date().toISOString(),
-        duration: formatTime(listenHistory[currentEpisode.id].totalListened),
-        completed: listenHistory[currentEpisode.id].completed
-    };
-    try {
-        console.log('שולח נתוני האזנה ל-API:', listenData);
-        const result = await fetchFromAPI('savePodcastListen', 'POST', { listenData: listenData });
-        console.log('תשובת API:', result);
-    } catch (error) {
-        console.error('שגיאה בשמירת נתוני האזנה:', error);
-    }
-}
-
 function getOrCreateDeviceId() {
     let deviceId = localStorage.getItem('podcastDeviceId');
     if (!deviceId) {
@@ -531,6 +593,62 @@ function getOrCreateDeviceId() {
         localStorage.setItem('podcastDeviceId', deviceId);
     }
     return deviceId;
+}
+
+// פונקציה ליצירת מזהה ייחודי להאזנה
+function generateListenSessionId() {
+    return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+}
+
+async function sendListenUpdate(updateType) {
+    if (!currentEpisode || !currentListenSession) return;
+    
+    const deviceId = getOrCreateDeviceId();
+    const currentTime = audioPlayer.currentTime;
+    const listenData = listenHistory[currentEpisode.id];
+    
+    // חישוב זמן האזנה כולל
+    let totalListened = 0;
+    if (listenData) {
+        // זמן שנצבר מהפעלות קודמות
+        totalListened = listenData.totalListened;
+        // זמן מההפעלה הנוכחית
+        if (listenData.startTime) {
+            const currentSessionTime = (Date.now() - listenData.startTime) / 1000;
+            totalListened += currentSessionTime;
+        }
+    } else {
+        totalListened = currentTime;
+    }
+    
+    const data = {
+        sessionId: currentListenSession,
+        deviceId: deviceId,
+        episodeId: currentEpisode.id,
+        episodeTitle: currentEpisode.title,
+        updateType: updateType,
+        currentTime: Math.floor(currentTime),
+        totalListened: Math.floor(totalListened),
+        completed: updateType === 'complete' ? true : (listenData?.completed || false),
+        timestamp: new Date().toISOString()
+    };
+    
+    try {
+        console.log(`שולח נתוני האזנה ל-API (${updateType}):`, {
+            sessionId: data.sessionId,
+            episodeTitle: data.episodeTitle,
+            totalListened: data.totalListened,
+            updateType: data.updateType
+        });
+        const result = await fetchFromAPI('savePodcastListen', 'GET', data);
+        console.log('תשובת API:', result);
+        
+        if (result.success) {
+            console.log(`נתוני האזנה נשמרו בהצלחה (${updateType})`);
+        }
+    } catch (error) {
+        console.error('שגיאה בשליחת נתוני האזנה:', error);
+    }
 }
 
 // הגדרת השלמה אוטומטית לסניפים
@@ -590,4 +708,5 @@ window.resumePlayback = resumePlayback;
 window.startFromBeginning = startFromBeginning;
 window.closeCompletionModal = closeCompletionModal;
 window.submitLotteryForm = submitLotteryForm;
-window.selectBranch = selectBranch; 
+window.selectBranch = selectBranch;
+window.generateListenSessionId = generateListenSessionId; 
