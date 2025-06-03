@@ -95,52 +95,104 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // טיפול בלחיצה על תמונות וידאו בקרוסלה
 document.addEventListener('DOMContentLoaded', function() {
-    // טיפול בלחיצה על תמונות וידאו בקרוסלה
-    const videoImages = document.querySelectorAll('.ad-image[data-video-src]');
-    
-    videoImages.forEach(image => {
-        const card = image.closest('.ad-card');
+    // טיפול בלחיצה על תמונות רגילות בקרוסלה
+    document.addEventListener('click', function(e) {
+        const adCard = e.target.closest('.ad-card');
+        const adImage = e.target.closest('.ad-image');
         
-        if (card) {
-            card.addEventListener('click', function() {
-                const videoSrc = image.getAttribute('data-video-src');
-                
-                // ניקוי מודאל קודם אם קיים
-                const existingModal = document.getElementById('videoModal');
-                if (existingModal) {
-                    document.body.removeChild(existingModal);
-                }
-                
-                // יצירת מודאל חדש
-                const modal = document.createElement('div');
-                modal.id = 'videoModal';
-                modal.className = 'video-modal';
-                
-                modal.innerHTML = `
-                    <div class="modal-content">
-                        <span class="close-video-modal">&times;</span>
-                        <video controls autoplay>
-                            <source src="${videoSrc}" type="video/mp4">
-                            הדפדפן שלך לא תומך בתגית וידאו.
-                        </video>
-                    </div>
-                `;
-                
-                document.body.appendChild(modal);
-                
-                // הגדרת סגירת המודאל
-                const closeButton = modal.querySelector('.close-video-modal');
-                closeButton.addEventListener('click', function() {
-                    document.body.removeChild(modal);
-                });
-                
-                // סגירה בלחיצה מחוץ לתוכן
-                modal.addEventListener('click', function(e) {
-                    if (e.target === modal) {
-                        document.body.removeChild(modal);
-                    }
-                });
-            });
+        if (adCard && adImage) {
+            const videoSrc = adImage.getAttribute('data-video-src');
+            
+            if (videoSrc) {
+                // טיפול בסרטון
+                handleVideoClick(adImage, videoSrc);
+            } else {
+                // טיפול בתמונה רגילה - הגדלה
+                handleImageClick(adImage);
+            }
         }
     });
+    
+    function handleVideoClick(image, videoSrc) {
+        // ניקוי מודאל קודם אם קיים
+        const existingModal = document.getElementById('videoModal');
+        if (existingModal) {
+            document.body.removeChild(existingModal);
+        }
+        
+        // יצירת מודאל חדש לסרטון
+        const modal = document.createElement('div');
+        modal.id = 'videoModal';
+        modal.className = 'video-modal';
+        
+        modal.innerHTML = `
+            <div class="modal-content">
+                <span class="close-video-modal">&times;</span>
+                <video controls autoplay>
+                    <source src="${videoSrc}" type="video/mp4">
+                    הדפדפן שלך לא תומך בתגית וידאו.
+                </video>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // הגדרת סגירת המודאל
+        const closeButton = modal.querySelector('.close-video-modal');
+        closeButton.addEventListener('click', function() {
+            document.body.removeChild(modal);
+        });
+        
+        // סגירה בלחיצה מחוץ לתוכן
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                document.body.removeChild(modal);
+            }
+        });
+    }
+    
+    function handleImageClick(image) {
+        // ניקוי מודאל קודם אם קיים
+        const existingModal = document.getElementById('imageModal');
+        if (existingModal) {
+            document.body.removeChild(existingModal);
+        }
+        
+        // יצירת מודאל חדש לתמונה
+        const modal = document.createElement('div');
+        modal.id = 'imageModal';
+        modal.className = 'image-modal';
+        
+        modal.innerHTML = `
+            <div class="modal-content">
+                <span class="close-image-modal">&times;</span>
+                <img src="${image.src}" alt="${image.alt}" class="modal-image">
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // הגדרת סגירת המודאל
+        const closeButton = modal.querySelector('.close-image-modal');
+        closeButton.addEventListener('click', function() {
+            document.body.removeChild(modal);
+        });
+        
+        // סגירה בלחיצה מחוץ לתוכן
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                document.body.removeChild(modal);
+            }
+        });
+        
+        // סגירה במקש ESC
+        document.addEventListener('keydown', function closeOnEsc(e) {
+            if (e.key === 'Escape') {
+                if (document.getElementById('imageModal')) {
+                    document.body.removeChild(modal);
+                }
+                document.removeEventListener('keydown', closeOnEsc);
+            }
+        });
+    }
 }); 
