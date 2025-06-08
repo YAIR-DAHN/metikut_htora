@@ -24,6 +24,14 @@ const EPISODES = [
         description: 'הפרק עוסק בסוגיה של "לא שילם שילם ממש" עד סוף העמוד',
         audioFile: 'assets/podcast/מאזינים למפקיד פרק ב.mp3',
         duration: "06:44"
+    },
+    {
+        id: 'episode10',
+        number: 3,
+        title: 'ספיישל חזרה - חומר עיון הלכתי',
+        description: 'פרק חזרה המיועד לעולים לגמר, הפרק עוסק בחזרה על חומר העיון ההלכתי',
+        audioFile: 'assets/podcast/ספיישל חזרה עיון הלכתי לעולים לגמר.mp3',
+        duration: "05:38"
     }
 ];
 
