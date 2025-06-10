@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>טופס זכייה - מתיקות התורה</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dark-mode.css">
+    <link rel="stylesheet" href="css/winner-form.css">
+    <script src="js/config.js"></script>
+    <script src="js/common.js"></script>
+</head>
+
+<body>
+    <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+        <p>שולח...</p>
+    </div>
+
+    <header>
+        <div class="logo-container">
+            <div class="secondary-logo">
+                <img src="assets/logos/or-israeli-logo.png" alt="אור ישראלי">
+            </div>
+            <div class="main-logo">
+                <img src="assets/logos/metikut-hatorah-logo.png" alt="מתיקות התורה">
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="form-section">
+            <div class="form-header">
+                <h1>
+                    <span class="material-icons">emoji_events</span>
+                    טופס זכייה
+                </h1>
+                <p class="form-subtitle">מזל טוב על הזכייה! אנא מלא את פרטיך לקבלת הפרס</p>
+            </div>
+
+            <form id="winnerForm" class="winner-form">
+                <div class="form-group">
+                    <label for="winningCategory">
+                        <span class="material-icons">category</span>
+                        זכייה עבור
+                    </label>
+                    <select id="winningCategory" name="winningCategory" required>
+                        <option value="">בחר סוג זכייה</option>
+                        <option value="מבחן בלכתך בדרך">מבחן בלכתך בדרך</option>
+                        <option value="חידון קליקרים">חידון קליקרים</option>
+                        <option value="מבחן בכתב קהל">מבחן בכתב קהל</option>
+                        <option value="7 מתמודדי הגמר">7 מתמודדי הגמר</option>
+                        <option value="נבחני הגמר בכתב">נבחני הגמר בכתב</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="userName">
+                        <span class="material-icons">person</span>
+                        שם הזוכה
+                    </label>
+                    <input type="text" id="userName" name="userName" required placeholder="הכנס את שמך המלא">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">
+                        <span class="material-icons">phone</span>
+                        מספר טלפון
+                    </label>
+                    <input type="tel" id="phone" name="phone" required placeholder="050-123-4567" dir="ltr">
+                </div>
+
+                <div class="form-group">
+                    <label for="branch">
+                        <span class="material-icons">location_on</span>
+                        סניף
+                    </label>
+                    <select id="branch" name="branch" required>
+                        <option value="">בחר סניף</option>
+                    </select>
+                </div>
+
+                <div class="bank-details-section">
+                    <h3>
+                        <span class="material-icons">account_balance</span>
+                        פרטי חשבון בנק
+                    </h3>
+                    <p class="bank-note">
+                        <span class="material-icons">info</span>
+                        שימו לב: הכסף יועבר רק לחשבון ההורים
+                    </p>
+
+                    <div class="form-group">
+                        <label for="accountOwner">
+                            <span class="material-icons">person_outline</span>
+                            שם בעל החשבון (הורה)
+                        </label>
+                        <input type="text" id="accountOwner" name="accountOwner" required placeholder="שם ההורה">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="parentPhone">
+                            <span class="material-icons">phone</span>
+                            טלפון הורה
+                        </label>
+                        <input type="tel" id="parentPhone" name="parentPhone" required placeholder="050-123-4567" dir="ltr">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="idNumber">
+                            <span class="material-icons">badge</span>
+                            תעודת זהות של בעל החשבון
+                        </label>
+                        <input type="text" id="idNumber" name="idNumber" required placeholder="123456789" dir="ltr" maxlength="9">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bankName">
+                            <span class="material-icons">account_balance</span>
+                            שם הבנק
+                        </label>
+                        <select id="bankName" name="bankName" required>
+                            <option value="">בחר בנק</option>
+                            <option value="בנק הפועלים">בנק הפועלים</option>
+                            <option value="בנק לאומי">בנק לאומי</option>
+                            <option value="בנק דיסקונט">בנק דיסקונט</option>
+                            <option value="בנק מזרחי טפחות">בנק מזרחי טפחות</option>
+                            <option value="בנק יהב">בנק יהב</option>
+                            <option value="בנק ירושלים">בנק ירושלים</option>
+                            <option value="בנק מרכנתיל דיסקונט">בנק מרכנתיל דיסקונט</option>
+                            <option value="בנק הבינלאומי">בנק הבינלאומי</option>
+                            <option value="בנק אוצר החייל">בנק אוצר החייל</option>
+                            <option value="בנק מסד">בנק מסד</option>
+                            <option value="אחר">אחר</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bankBranch">
+                            <span class="material-icons">domain</span>
+                            סניף בנק
+                        </label>
+                        <input type="text" id="bankBranch" name="bankBranch" required placeholder="מספר/שם סניף הבנק">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="accountNumber">
+                            <span class="material-icons">receipt</span>
+                            מספר חשבון
+                        </label>
+                        <input type="text" id="accountNumber" name="accountNumber" required placeholder="1234567" dir="ltr">
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn ripple">
+                    <span class="material-icons">send</span>
+                    שלח טופס זכייה
+                </button>
+            </form>
+
+            <div id="successMessage" class="success-message hidden">
+                <div class="success-content">
+                    <span class="material-icons success-icon">check_circle</span>
+                    <h3>טופס הזכייה נשלח בהצלחה!</h3>
+                    <p>פרטי הזכייה שלך נשמרו במערכת. סכום הזכייה יועבר לחשבון ההורים במהלך החודש הקרוב.</p>
+                </div>
+            </div>
+
+            <div id="errorMessage" class="error-message hidden">
+                <div class="error-content">
+                    <span class="material-icons error-icon">error</span>
+                    <h3>שגיאה בשליחת הטופס</h3>
+                    <p id="errorText">אירעה שגיאה. אנא נסה שוב.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p class="footer-credit" onclick="showContactInfo()">נבנה ע"י Y.D. Systems</p>
+    </footer>
+
+    <script src="js/winner-form.js"></script>
+</body>
+
+</html> 

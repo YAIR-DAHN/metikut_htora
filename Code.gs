@@ -88,6 +88,16 @@ function handleRequest(e) {
       }
       return listenResult;
       
+    case 'submitWinnerForm':
+      if (!data) {
+        return { error: 'No data provided' };
+      }
+      const winnerResult = submitWinnerForm(data.winnerDetails);
+      if (!winnerResult.success) {
+        return { error: winnerResult.error || 'Failed to submit winner form' };
+      }
+      return winnerResult;
+      
     case 'getWinners':
       return getWinners();
       
@@ -371,6 +381,67 @@ function savePodcastListen(data) {
   } catch (error) {
     console.error('שגיאה בשמירת נתוני האזנה:', error);
     return { success: false, error: error.toString() };
+  }
+}
+
+// פונקציה לשמירת טופס זכייה
+function submitWinnerForm(winnerDetails) {
+  console.log("קבלת בקשת טופס זכייה:", JSON.stringify(winnerDetails));
+  
+  if (!winnerDetails || !winnerDetails.winningCategory || !winnerDetails.userName || 
+      !winnerDetails.phone || !winnerDetails.branch || !winnerDetails.accountOwner || 
+      !winnerDetails.parentPhone || !winnerDetails.idNumber || !winnerDetails.bankName || 
+      !winnerDetails.bankBranch || !winnerDetails.accountNumber) {
+    console.error("חסרים פרטי זכייה:", JSON.stringify(winnerDetails));
+    return {
+      success: false,
+      error: 'חסרים פרטי זכייה נדרשים'
+    };
+  }
+
+  try {
+    // בדיקה אם קיים גיליון טופס זכייה, ואם לא - יוצרים אותו
+    let ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    let winnerSheet = ss.getSheetByName('טופס זכייה');
+    
+    if (!winnerSheet) {
+      console.log("יוצר גיליון טופס זכייה חדש");
+      winnerSheet = ss.insertSheet('טופס זכייה');
+      winnerSheet.getRange('A1:K1').setValues([
+        ['תאריך', 'זכייה עבור', 'שם הזוכה', 'טלפון', 'סניף', 'שם בעל החשבון', 'טלפון הורה', 'תעודת זהות', 'שם הבנק', 'סניף הבנק', 'מספר חשבון']
+      ]);
+      winnerSheet.setFrozenRows(1);
+    }
+    
+    const timestamp = new Date();
+    console.log("הוספת טופס זכייה חדש עבור:", winnerDetails.userName);
+    
+    // שמירת פרטי הזכייה
+    winnerSheet.appendRow([
+      timestamp,
+      winnerDetails.winningCategory,
+      winnerDetails.userName,
+      winnerDetails.phone,
+      winnerDetails.branch,
+      winnerDetails.accountOwner,
+      winnerDetails.parentPhone,
+      winnerDetails.idNumber,
+      winnerDetails.bankName,
+      winnerDetails.bankBranch,
+      winnerDetails.accountNumber
+    ]);
+    
+    console.log("טופס זכייה נשמר בהצלחה");
+    return {
+      success: true,
+      message: 'טופס הזכייה נשלח בהצלחה'
+    };
+  } catch (error) {
+    console.error('שגיאת שמירת טופס זכייה:', error.toString());
+    return {
+      success: false,
+      error: 'שגיאה בשמירת טופס הזכייה: ' + error.toString()
+    };
   }
 }
 

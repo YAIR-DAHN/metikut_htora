@@ -1,6 +1,6 @@
 // פונקציות משותפות כמו showModal, initDarkMode וכו' 
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbwpOz3V8V7k14t-VxjnDtKIrQpz2uZVCCZz727KP1RjK7Zh9h9XgfJa2xkpe8P4Zt9J4g/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxtqj9BNbf1ZQzQkychAI3FqGjZXhniI8Kyp72HMgrPDqY25KcHXQ1Jk8VNC3je7rJqag/exec';
 
 // קאש לנתונים
 const cache = {
